@@ -20,22 +20,26 @@ const error = ref();
 
 const formBody = ref({
     // Werte initialiseren die Input Felder -> automatisch ausgefüllt
-    email: 'golfcup2023@wak-online.de',
+    //email: 'golfcup2023@wak-online.de',
+    email: 'golfcup2023',
     password: 'handicap'
 });
 
-const requestBody = ref({
+const requestBody = ref({ // Diese Angaben gehen in den Request-Body
     email: '',
     password: ''
 });
 
 const login = async () => {
 
-    requestBody.value = formBody.value;
+    requestBody.value.email = formBody.value.email + '@wak-online.de'
+    requestBody.value.password = formBody.value.password
+
     //const { data, error } = await useLazyFetch(authUrl, {
     await useLazyFetch(authUrl, {
         method: 'POST',
-        body: formBody,
+        body: requestBody,
+
     }).then(response => {
         const responseData = response.data.value
         const responseError = response.error.value
@@ -52,7 +56,6 @@ const login = async () => {
         console.log(error)
     })
 }
-
 </script>
 
 <template>
@@ -77,9 +80,10 @@ const login = async () => {
         </div>
         <form @submit.prevent="login" autocomplete="off">
             <h1>Loginseite</h1>
-            Benutzername: <input type="text" v-model.lazy="formBody.username" required><br>
+            Benutzername: <input type="text" v-model.lazy="formBody.email"><br>
             Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
-            <button type="submit" :disabled="!formBody.username || !formBody.password">Login</button>
+            <!--<button type="submit" :disabled="!formBody.username || !formBody.password">Login</button>-->
+            <button type="submit">Login</button>
         </form>
     </div>
 </template>
