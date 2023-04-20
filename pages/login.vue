@@ -7,7 +7,7 @@ const isAuthenticated = useState('authenticated', () => false); // User ist nich
 const authUrl = 'http://directus8/huawei/auth/authenticate'
 
 useHead({
-    title: 'Login X'
+    title: 'Login Auth'
 })
 
 // composables testing
@@ -31,6 +31,7 @@ const requestBody = ref({
 
 const login = async () => {
 
+    requestBody.value = formBody.value;
     //const { data, error } = await useLazyFetch(authUrl, {
     await useLazyFetch(authUrl, {
         method: 'POST',
@@ -51,7 +52,7 @@ const login = async () => {
             data.value = res_data // data für die Ausgabe am Bildschirm
             accessToken.value = res_data.data.token // speichere Access Token in useState
             isAuthenticated.value = true // User ist authentifiziert und kann das Formular ausfüllen
-            return navigateTo('/');
+            //return navigateTo('/');
         }
     }, error => {
         console.log('exception...')
@@ -84,7 +85,7 @@ const login = async () => {
         <form @submit.prevent="login" autocomplete="off">
             <h1>Loginseite</h1>
             Input email: <input type="text" v-model.lazy="formBody.email" required><br>
-            Input password: <input type="password" v-model.lazy="formBody.password" required><br>
+            Input password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
             <button type="submit" :disabled="!formBody.email || !formBody.password">Login</button>
         </form>
     </div>
