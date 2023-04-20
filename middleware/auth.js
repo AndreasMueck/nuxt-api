@@ -1,6 +1,5 @@
 export default defineNuxtRouteMiddleware((to, from) => {
-    //const isAuthenticated = useState('authenticated');
-    const isAuthenticated = useAuthentication()
+    const isAuthenticated = useAuthentication() // hole Status aus Composable
 
     if (!isAuthenticated) {
       return navigateTo('/login');
