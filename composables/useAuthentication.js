@@ -1,10 +1,13 @@
 export const useAuthentication = () => { // named export
-    const authenticacted = useState('authenticated'); 
+    const authenticactedState = useState('authenticated'); 
 
-    if (authenticacted.value === true){
-        return true
-    }
-    else {
-        return false
-    }
+    const isAuthenticated = authenticactedState.value ? true : false; 
+    return isAuthenticated;
+
+    // if (authenticactedState.value === true){
+    //     return true
+    // }
+    // else {
+    //     return false
+    // }
 }
