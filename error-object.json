@@ -1,0 +1,17 @@
+{
+    "_object": {
+        "8Unx2jbFKP": {
+            "message": " (404 Not Found (http://directus8/huawei/auth/authenticate))",
+            "statusCode": 404,
+            "statusMessage": "Not Found",
+            "data": {
+                "error": {
+                    "code": 100,
+                    "message": "Invalid user credentials"
+                }
+            }
+        }
+    },
+    "_key": "8Unx2jbFKP",
+    "__v_isRef": true
+}

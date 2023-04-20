@@ -1,0 +1,99 @@
+<script setup>
+import { ref, useLazyFetch } from "#imports";
+
+const accessToken = useState('access-token', () => ''); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
+const isAuthenticated = useState('authenticated', () => false); // User ist nicht authentifiziert
+
+const authUrl = 'http://directus8/huawei/auth/authenticate'
+
+useHead({
+    title: 'Login Auth'
+})
+
+// composables testing
+//const hello = useHello()
+//const helloWorld = useHelloWorld()
+
+const pending = ref();
+const data = ref();
+const error = ref();
+
+const formBody = ref({
+    // Werte initialiseren die Input Felder -> automatisch ausgefüllt
+    email: 'golfcup2023@wak-online.de',
+    password: 'handicap'
+});
+
+const requestBody = ref({
+    email: '',
+    password: ''
+});
+
+const login = async () => {
+
+    try {
+        const { data, error } = await useLazyFetch(authUrl, {
+            method: 'POST',
+            body: formBody,
+        });
+
+        console.log('Data: ' + JSON.stringify(data.value))
+        console.log('Error: ' + JSON.stringify(error.value))
+        //Error
+        //Falsche URL - statusCode 404 - statusMessage Not found // error.code 1 error.message Not found
+        //Falsche Logindaten - statusCode 404 - statusMessage Not found // error.code 100 error.message Invalid user credentials
+
+        if (error.value) //throw 'Anfrage an Server fehlgeschlagen' // funktioniert auch
+            throw new Error('Verbindungsfehler - falsche Benutzerangaben etc') // Direkt nach throw wird die Ausführung beendet
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+</script>
+
+<template>
+    <div>
+        <!-- <p>{{ hello }}</p><p>{{ helloWorld }}</p> -->
+        <nuxt-link to="/">Indexseite</nuxt-link><br>
+        <nuxt-link to="/test">Testseite</nuxt-link>
+        <p>A:{{ accessToken }}</p>
+        <div class="center-data" v-if="pending">
+            <h1>Loading spinner ...</h1>
+        </div>
+        <div class="center-data" v-if="data">
+            <h1>DATA:</h1>
+            <myJson :data="data" :showIcon="true" />
+            <!-- <pre>{{ data }}</pre> -->
+        </div>
+        <div class="center-error" v-if="error">
+            Error status code: {{ error.statusCode }}<br>
+            Error status message: {{ error.statusMessage }}<br>
+            Error code: {{ error.data.error.code }}<br>
+            Error message: {{ error.data.error.message }}
+        </div>
+        <form @submit.prevent="login" autocomplete="off">
+            <h1>Loginseite</h1>
+            Input email: <input type="text" v-model.lazy="formBody.email" required><br>
+            Input password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
+            <button type="submit" :disabled="!formBody.email || !formBody.password">Login</button>
+        </form>
+    </div>
+</template>
+
+<style>
+.center-data {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+    word-wrap: break-word;
+}
+
+.center-error {
+    margin: auto;
+    width: 50%;
+    border: 3px solid red;
+    padding: 10px;
+}
+</style>
