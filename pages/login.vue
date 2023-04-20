@@ -36,23 +36,16 @@ const login = async () => {
     await useLazyFetch(authUrl, {
         method: 'POST',
         body: formBody,
-        /* body: {
-            email: 'golfcup2023@wak-online.de',
-            password: 'handicap'
-        } */
-    }).then(res => {
-        const res_data = res.data.value
-        const res_error = res.error.value
-        if (res_error) {    // show Error messages
-            //console.log('Error: ' + JSON.stringify(error.statusCode + ' ' + error.statusMessage))
-            //console.log('Error: ' + JSON.stringify(error.data.error.code + ' ' + error.data.error.message))
-            error.value = res_error
-        } else {        // show Data
-            //console.log('Data: ' + JSON.stringify(data.data.token))
-            data.value = res_data // data für die Ausgabe am Bildschirm
-            accessToken.value = res_data.data.token // speichere Access Token in useState
+    }).then(response => {
+        const responseData = response.data.value
+        const responseError = response.error.value
+        if (responseError) {
+            error.value = responseError // nutze error-ref für die Ausgabe im Template
+        } else {
+            data.value = responseData // nutze data-ref für die Ausgabe im Template
+            accessToken.value = responseData.data.token // speichere Access Token in useState
             isAuthenticated.value = true // User ist authentifiziert und kann das Formular ausfüllen
-            //return navigateTo('/');
+            return navigateTo('/');
         }
     }, error => {
         console.log('exception...')
@@ -84,9 +77,9 @@ const login = async () => {
         </div>
         <form @submit.prevent="login" autocomplete="off">
             <h1>Loginseite</h1>
-            Input email: <input type="text" v-model.lazy="formBody.email" required><br>
-            Input password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
-            <button type="submit" :disabled="!formBody.email || !formBody.password">Login</button>
+            Benutzername: <input type="text" v-model.lazy="formBody.username" required><br>
+            Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
+            <button type="submit" :disabled="!formBody.username || !formBody.password">Login</button>
         </form>
     </div>
 </template>

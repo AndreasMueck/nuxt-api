@@ -1,6 +1,5 @@
 <script setup>
 const accessToken = useState('access-token');
-
 </script>
 
 <template>
