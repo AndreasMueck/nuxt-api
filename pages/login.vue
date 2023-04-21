@@ -67,11 +67,10 @@ const login = async () => {
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>
         </div>
-        <div class="center-data" v-if="data">
+        <!-- <div class="center-data" v-if="data">
             <h1>DATA:</h1>
             <myJson :data="data" :showIcon="true" />
-            <!-- <pre>{{ data }}</pre> -->
-        </div>
+        </div> -->
         <div class="center-error" v-if="error">
             Error status code: {{ error.statusCode }}<br>
             Error status message: {{ error.statusMessage }}<br>
