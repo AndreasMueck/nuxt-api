@@ -1,7 +1,7 @@
 <script setup>
 import { ref, useLazyFetch } from "#imports";
 
-const accessToken = useState('access-token', () => ''); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
+const accessToken = useState('accessToken', () => ''); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
 const isAuthenticated = useState('authenticated', () => false); // User ist nicht authentifiziert
 
 const authUrl = 'http://directus8/huawei/auth/authenticate'
@@ -35,35 +35,36 @@ const login = async () => {
     requestBody.value.email = formBody.value.email + '@wak-online.de'
     requestBody.value.password = formBody.value.password
 
-    //const { data, error } = await useLazyFetch(authUrl, {
-    await useLazyFetch(authUrl, {
+    const requestOptions = {
         method: 'POST',
-        body: requestBody,
+        body: requestBody
+    }
 
-    }).then(response => {
-        const responseData = response.data.value
-        const responseError = response.error.value
-        if (responseError) {
-            error.value = responseError // nutze error-ref für die Ausgabe im Template
-        } else {
-            data.value = responseData // nutze data-ref für die Ausgabe im Template
-            accessToken.value = responseData.data.token // speichere Access Token in useState
-            isAuthenticated.value = true // User ist authentifiziert und kann das Formular ausfüllen
-            return navigateTo('/');
-        }
-    }, error => {
-        console.log('exception...')
-        console.log(error)
-    })
+    //const { data, error } = await useLazyFetch(authUrl, {
+    await useLazyFetch(authUrl, requestOptions)
+        .then(response => {
+
+            // response object: data, error, execute, pending, refresh
+            const responseData = response.data.value
+            const responseError = response.error.value
+            if (responseError) {
+                error.value = responseError // nutze error-ref für die Ausgabe im Template
+            } else {
+                data.value = responseData // nutze data-ref für die Ausgabe im Template
+                accessToken.value = responseData.data.token // schreibe das gelieferte Access Token in useState
+                isAuthenticated.value = true // isAuthenticated flag wird gesetzt. User ist authentifiziert und kann das Formular ausfüllen
+                return navigateTo('/'); // redirect auf die Formularseite
+            }
+        })
 }
 </script>
 
 <template>
     <div>
         <!-- <p>{{ hello }}</p><p>{{ helloWorld }}</p> -->
-        <nuxt-link to="/">Indexseite</nuxt-link><br>
+        <nuxt-link to="/">Formularseite (index.vue)</nuxt-link><br>
         <nuxt-link to="/test">Testseite</nuxt-link>
-        <p>A:{{ accessToken }}</p>
+        <p>Token:{{ accessToken }}</p>
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>
         </div>
@@ -77,7 +78,7 @@ const login = async () => {
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
         </div>
-        <form @submit.prevent="login" autocomplete="off">
+        <form @submit.prevent="login">
             <h1>Loginseite</h1>
             Benutzername: <input type="text" v-model.lazy="formBody.email"><br>
             Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>

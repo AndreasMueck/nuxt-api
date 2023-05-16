@@ -5,7 +5,7 @@ export function authHeader() {
     const accessToken = useState('access-token');
 
     if (authenticactedState && accessToken) {
-        return { 'Authorization': 'Bearer ' + accessToken };
+        return { 'Authorization': 'Bearer ' + accessToken.value };
     } else {
         return {};
     }
