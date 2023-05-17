@@ -13,9 +13,14 @@ useHead({
     }
 })
 
+const postUrl = 'http://directus8/huawei/items/golfcup2023'
+
 const error = ref()
 const data = ref()
+const pending = ref()
 const formular = ref(true)
+const mailError = ref('')
+const isOff = ref(true)
 
 const options = [
     { value: 'Frau', text: "Frau" },
@@ -24,9 +29,10 @@ const options = [
 
 const form = reactive({
     veranstaltung: '',
-    anrede: '',
-    name: '',
-    vorname: ''
+    anrede: 'Frau',
+    name: 'name_',
+    vorname: 'vorname_',
+    email: 'mueck@wak-online'
 })
 
 const requestOptions = {
@@ -35,15 +41,9 @@ const requestOptions = {
     body: JSON.stringify(form),
 }
 
-//console.log(requestOptions);
-
-const postUrl = 'http://directus8/huawei/items/golfcup2023'
-//const accessToken = useState('accessToken')
+const disabled = computed(() => isOff.value);
 
 const post = async () => {
-    // Data ist gesendet {"veranstaltung":"Veranstaltung 111","anrede":"Frau","name":"test"}
-    //console.log('Data ist gesendet ' + JSON.stringify(form))
-
     const accessToken = useState('accessToken')
 
     await useLazyFetch(postUrl, {
@@ -54,10 +54,8 @@ const post = async () => {
     })
         .then(response => {
 
-            //console.log(JSON.stringify(response.data.value.data)) 
-            //{"id":11,"created_on":"2023-05-16T09:17:05+00:00","veranstaltung":"Veranstaltung 111","anrede":"Frau","name":"ffffff"}
-            //console.log(JSON.stringify(response.data.value.data.id))
-            //11
+            // console.log(JSON.stringify(response.data.value.data)) // Liefert kompletten Datensatz
+            // console.log(JSON.stringify(response.data.value.data.id)) // Liefert Datensatz ID
 
             const responseData = response.data.value
             const responseError = response.error.value
@@ -76,6 +74,36 @@ const post = async () => {
         })
 
 }
+
+watch(
+    () => form.email,
+    async (email) => {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+            // Emaileingabe ist gültig
+            console.log(`email ist: ${email}`)
+            mailError.value = ('')
+
+            const accessToken = useState('accessToken')
+            // Ist ein Datensatz mit dieser Email bereits vorhanden?
+            const emailCheckUrl = 'http://directus8/huawei/items/golfcup2023?filter[email]=' + email + '&single=1'
+            const { pending, data } = await useLazyFetch(emailCheckUrl, {
+                method: 'GET',
+                headers: { 'Authorization': 'Bearer ' + accessToken.value }
+            })
+            if (data.value) {
+                mailError.value = ('Email ist bereits vorhanden')
+                isOff.value = true
+            } else {
+                isOff.value = false
+            }
+
+        } else {
+            console.log('Nope')
+            mailError.value = ('Bitte eine gültige Email eingeben')
+            isOff.value = true
+        }
+    }
+)
 
 </script>
 
@@ -108,14 +136,17 @@ const post = async () => {
                         </option>
                     </select>
                     <br><br>
-                    <input v-model="form.name" placeholder="name" required />
+                    <input v-model="form.name" name="name" placeholder="name" required />
                     <br><br>
-                    <input v-model="form.vorname" placeholder="vorname" required />
-                    <br>
-                    <br>
+                    <input v-model="form.vorname" name="vorname" placeholder="vorname" required />
+                    <br><br>
+                    <input v-model="form.email" name="email" type="email" placeholder="E-Mail eingeben ..." required />
+                    <div v-if="pending">Checke E-Mail ...</div>
+                    <div v-if="mailError">{{ mailError }}</div>
+                    <br><br>
                     <myJson :data="form" :showIcon="true" />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit" :disabled="disabled">Speichern</button>
             </form>
         </template>
     </div>
