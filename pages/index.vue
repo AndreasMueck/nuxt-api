@@ -15,6 +15,7 @@ useHead({
 
 const postUrl = 'http://directus8/huawei/items/golfcup2023'
 
+// Allgemeine reactive Variablen
 const error = ref()
 const data = ref()
 const pending = ref()
@@ -22,33 +23,31 @@ const formular = ref(true)
 const mailError = ref('')
 const isOff = ref(true)
 
+// Select-Optionen im Formular
 const options = [
     { value: 'Frau', text: "Frau" },
     { value: 'Herr', text: "Herr" }
 ]
 
+// Form Daten in reactives Object
 const form = reactive({
     veranstaltung: '',
     anrede: 'Frau',
     name: 'name_',
     vorname: 'vorname_',
-    email: 'mueck@wak-online'
+    email: ''
 })
 
-const requestOptions = {
-    method: 'POST',
-    headers: authHeader(),
-    body: JSON.stringify(form),
-}
-
+// Anmelden-Button ist ohne gültige Eingabedaten deaktiviert
 const disabled = computed(() => isOff.value);
 
+// Sende Daten an Server
 const post = async () => {
     const accessToken = useState('accessToken')
 
     await useLazyFetch(postUrl, {
         method: 'POST',
-        //headers: authHeader(),
+        //headers: authHeader(), // Warum funktioniert mein Composable in UTILS nicht? Später klären!
         headers: { 'Authorization': 'Bearer ' + accessToken.value },
         body: JSON.stringify(form)
     })
@@ -110,6 +109,7 @@ watch(
 <template>
     <div>
         <nuxt-link to="/login">Zurück zu Login</nuxt-link>
+        <LoginImage />
         <h1>User ist authentifiziert!<br>Formular wird angezeigt</h1>
         <template v-if="data">
             <h1>Daten wurden gespeichert</h1>
@@ -142,11 +142,13 @@ watch(
                     <br><br>
                     <input v-model="form.email" name="email" type="email" placeholder="E-Mail eingeben ..." required />
                     <div v-if="pending">Checke E-Mail ...</div>
-                    <div v-if="mailError">{{ mailError }}</div>
-                    <br><br>
+                    <div v-if="mailError" class="false">{{ mailError }}</div>
+                    <br><br><br>
+                    Eingabekontrolle<br>
                     <myJson :data="form" :showIcon="true" />
+                    <br><br>
+                    <button type="submit" :disabled="disabled">Speichern</button>
                 </div>
-                <button type="submit" :disabled="disabled">Speichern</button>
             </form>
         </template>
     </div>

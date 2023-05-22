@@ -11,8 +11,8 @@ useHead({
 })
 
 // composables testing
-//const hello = useHello()
-//const helloWorld = useHelloWorld()
+// const hello = useHello()
+// const helloWorld = useHelloWorld()
 
 const pending = ref();
 const data = ref();
@@ -61,7 +61,8 @@ const login = async () => {
 
 <template>
     <div>
-        <!-- <p>{{ hello }}</p><p>{{ helloWorld }}</p> -->
+        <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
+        <LoginImage />
         <nuxt-link to="/">Formularseite (index.vue)</nuxt-link><br>
         <nuxt-link to="/test">Testseite</nuxt-link>
         <p>Token:{{ accessToken }}</p>
@@ -82,9 +83,15 @@ const login = async () => {
             <h1>Loginseite</h1>
             Benutzername: <input type="text" v-model.lazy="formBody.email"><br>
             Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
-            <!--<button type="submit" :disabled="!formBody.username || !formBody.password">Login</button>-->
-            <button type="submit">Login</button>
+            <!-- <button type="submit">Anmelden</button> -->
+            <MainButton type="submit" childclass="button grau">Anmelden</MainButton>
         </form>
+        <br>
+        <br>
+        Testen von Props, OK!
+        <br>
+        <MainButton childclass="button rot">Roter Button</MainButton>
+        <MainButton childclass="button blau ">Blauer Button</MainButton>
     </div>
 </template>
 
