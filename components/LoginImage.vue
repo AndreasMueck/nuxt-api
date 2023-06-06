@@ -2,7 +2,7 @@
     <img src="~/assets/login-page.png" alt="Login Image" />
 </template>
 
-<style>
+<style scoped>
 img {
     display: block;
     margin-left: auto;

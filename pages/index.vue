@@ -82,14 +82,14 @@ watch(
             console.log(`email ist: ${email}`)
             mailError.value = ('')
 
-            const accessToken = useState('accessToken')
             // Ist ein Datensatz mit dieser Email bereits vorhanden?
+            const accessToken = useState('accessToken')
             const emailCheckUrl = 'http://directus8/huawei/items/golfcup2023?filter[email]=' + email + '&single=1'
             const { pending, data } = await useLazyFetch(emailCheckUrl, {
                 method: 'GET',
                 headers: { 'Authorization': 'Bearer ' + accessToken.value }
             })
-            if (data.value) {
+            if (data.value) { // data.value ist nicht leer, ergo E-Mail ist vorhanden
                 mailError.value = ('Email ist bereits vorhanden')
                 isOff.value = true
             } else {

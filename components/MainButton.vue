@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <button :class="childclass">
-            <slot>Default</slot>
-        </button>
-    </div>
+    <!--<div> -->
+    <button :class="childclass">
+        <slot>Default</slot>
+    </button>
+    <!-- </div> -->
 </template>
 
 <script setup>

@@ -43,7 +43,6 @@ const login = async () => {
     //const { data, error } = await useLazyFetch(authUrl, {
     await useLazyFetch(authUrl, requestOptions)
         .then(response => {
-
             // response object: data, error, execute, pending, refresh
             const responseData = response.data.value
             const responseError = response.error.value
@@ -57,13 +56,19 @@ const login = async () => {
             }
         })
 }
+
+const label = ref('Provided: Absenden')
+provide('key', label) // Deaktivieren dann wird default im Inject genommen
+
 </script>
 
 <template>
     <div>
         <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
         <LoginImage />
-        <nuxt-link to="/">Formularseite (index.vue)</nuxt-link><br>
+        <nuxt-link to="/datenschutz">Datenschutz</nuxt-link><br />
+        <nuxt-link to="/impressum">Impressum</nuxt-link><br />
+        <nuxt-link to="/">Formularseite (index.vue)</nuxt-link><br />
         <nuxt-link to="/test">Testseite</nuxt-link>
         <p>Token:{{ accessToken }}</p>
         <div class="center-data" v-if="pending">
@@ -82,16 +87,18 @@ const login = async () => {
         <form @submit.prevent="login">
             <h1>Loginseite</h1>
             Benutzername: <input type="text" v-model.lazy="formBody.email"><br>
-            Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br>
+            Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br><br>
             <!-- <button type="submit">Anmelden</button> -->
-            <MainButton type="submit" childclass="button grau">Anmelden</MainButton>
+            <MainButton type="submit" childclass="button grau">Anmelden (grauer Button)</MainButton>
         </form>
+        <br><br><br><br><br><br><br>
+        Testen von Button-Props, funktioniert!
         <br>
-        <br>
-        Testen von Props, OK!
-        <br>
-        <MainButton childclass="button rot">Roter Button</MainButton>
-        <MainButton childclass="button blau ">Blauer Button</MainButton>
+        <MainButton childclass="button rot">Roter Button ohne fallthrough attributes</MainButton>
+        <div>
+            <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes</ButtonTest>
+        </div>
+
     </div>
 </template>
 
