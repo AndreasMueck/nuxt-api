@@ -1,10 +1,16 @@
 <script setup>
 import { ref, useLazyFetch } from "#imports";
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
 
 const accessToken = useState('accessToken', () => ''); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
 const isAuthenticated = useState('authenticated', () => false); // User ist nicht authentifiziert
 
 const authUrl = 'http://directus8/huawei/auth/authenticate'
+
+definePageMeta({
+    layout: "custom",
+})
 
 useHead({
     title: 'Login Auth'
@@ -48,6 +54,12 @@ const login = async () => {
             const responseError = response.error.value
             if (responseError) {
                 error.value = responseError // nutze error-ref für die Ausgabe im Template
+                toast.add({
+                    severity: 'error',
+                    summary: 'Fehler',
+                    detail: 'Ungültige Anmeldedaten',
+                    life: 5000
+                })
             } else {
                 data.value = responseData // nutze data-ref für die Ausgabe im Template
                 accessToken.value = responseData.data.token // schreibe das gelieferte Access Token in useState
@@ -60,45 +72,68 @@ const login = async () => {
 const label = ref('Provided: Absenden')
 provide('key', label) // Deaktivieren dann wird default im Inject genommen
 
+function enableCustomLayout() {
+    setPageLayout('default')
+}
+
+
 </script>
 
 <template>
     <div>
-        <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
-        <LoginImage />
-        <nuxt-link to="/datenschutz">Datenschutz</nuxt-link><br />
-        <nuxt-link to="/impressum">Impressum</nuxt-link><br />
-        <nuxt-link to="/">Formularseite (index.vue)</nuxt-link><br />
-        <nuxt-link to="/test">Testseite</nuxt-link>
-        <p>Token:{{ accessToken }}</p>
-        <div class="center-data" v-if="pending">
-            <h1>Loading spinner ...</h1>
-        </div>
-        <!-- <div class="center-data" v-if="data">
-            <h1>DATA:</h1>
-            <myJson :data="data" :showIcon="true" />
-        </div> -->
-        <div class="center-error" v-if="error">
+        <!-- Toast für Nachrichten-->
+        <Toast position="top-center" />
+        <!-- <div class="center-error" v-if="error">
             Error status code: {{ error.statusCode }}<br>
             Error status message: {{ error.statusMessage }}<br>
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
-        </div>
+        </div> -->
         <form @submit.prevent="login">
+            <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
+                <div class="text-center mb-5">
+                    <LoginImage />
+                    <div class="text-900 text-3xl font-medium mb-3">Anmelden (Test mit PrimeVue / Theme: saga-blue / Lato
+                        font)
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="username">Benutzername</label>
+                    <input id="username" type="text" v-model.lazy="formBody.email"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+                <div class="field">
+                    <label for="password">Passwort</label>
+                    <input id="password" type="password" v-model.lazy="formBody.password" autocomplete="off"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+                <Button type="submit" label="Anmelden" icon="pi pi-user" class="w-full"></Button>
+            </div>
+        </form>
+        <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
+        <!-- <p>Token:{{ accessToken }}</p>-->
+        <div class="center-data" v-if="pending">
+            <h1>Loading spinner ...</h1>
+        </div>
+        <button @click="enableCustomLayout">Seiten-Layout programmatisch ändern</button>
+        <!-- <div class="center-data" v-if="data">
+            <h1>DATA:</h1>
+            <myJson :data="data" :showIcon="true" />
+        </div> -->
+        <!-- <form @submit.prevent="login">
             <h1>Loginseite</h1>
             Benutzername: <input type="text" v-model.lazy="formBody.email"><br>
             Password: <input type="password" v-model.lazy="formBody.password" autocomplete="off"><br><br>
-            <!-- <button type="submit">Anmelden</button> -->
+            <button type="submit">Anmelden</button>
             <MainButton type="submit" childclass="button grau">Anmelden (grauer Button)</MainButton>
-        </form>
-        <br><br><br><br><br><br><br>
+        </form> -->
+        <!-- <br><br>
         Testen von Button-Props, funktioniert!
         <br>
-        <MainButton childclass="button rot">Roter Button ohne fallthrough attributes</MainButton>
+        <MainButton childclass="button rot">Roter Button ohne fallthrough attributes (hier mit props)</MainButton>
         <div>
-            <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes</ButtonTest>
-        </div>
-
+            <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes (id,class,style)</ButtonTest>
+        </div> -->
     </div>
 </template>
 
@@ -116,5 +151,9 @@ provide('key', label) // Deaktivieren dann wird default im Inject genommen
     width: 50%;
     border: 3px solid red;
     padding: 10px;
+}
+
+.gruen {
+    background-color: green;
 }
 </style>

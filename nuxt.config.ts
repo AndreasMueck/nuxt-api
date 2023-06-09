@@ -1,7 +1,18 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     modules: ['@nuxt/image-edge', '@nuxt/content'],
-    css: ['vue-json-pretty/lib/styles.css'],
+    css: [
+        'vue-json-pretty/lib/styles.css',
+        'primevue/resources/themes/saga-blue/theme.css',
+        'primevue/resources/primevue.css',
+        'primeicons/primeicons.css',
+        'primeflex/primeflex.css',
+        '@/assets/_theme.scss'
+    ],
+    build: {
+        transpile: ['primevue']
+    },
+    //ssr: false,
     experimental: {
         payloadExtraction: false
     },

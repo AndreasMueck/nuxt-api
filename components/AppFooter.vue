@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    //height: 100px;
+    /* height: 100px; */
     background-color: grey;
     color: white;
 }

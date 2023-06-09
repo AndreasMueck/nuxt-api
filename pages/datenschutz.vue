@@ -11,10 +11,10 @@
   color: green;
 }
 
-:deep(li) {
+:deep(ul:first-of-type) {
   /* :deep(selector) ist notwendig, um den Text aus dem markdown zu stylen */
   color: blue;
-
+  text-transform: uppercase;
 }
 
 

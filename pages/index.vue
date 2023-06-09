@@ -1,4 +1,9 @@
 <script setup>
+
+import { useToast } from 'primevue/usetoast'
+const toast = useToast()
+
+
 definePageMeta({
     middleware: 'auth' // Zugriff auf Seite index.vue nur als berechtigter User
 })
@@ -32,7 +37,7 @@ const options = [
 // Form Daten in reactives Object
 const form = reactive({
     veranstaltung: '',
-    anrede: 'Frau',
+    anrede: '',
     name: 'name_',
     vorname: 'vorname_',
     email: ''
@@ -47,7 +52,7 @@ const post = async () => {
 
     await useLazyFetch(postUrl, {
         method: 'POST',
-        //headers: authHeader(), // Warum funktioniert mein Composable in UTILS nicht? Später klären!
+        //headers: authHeader(), // Warum funktioniert mein Composable authHeader() in UTILS nicht? Später klären!
         headers: { 'Authorization': 'Bearer ' + accessToken.value },
         body: JSON.stringify(form)
     })
@@ -63,6 +68,8 @@ const post = async () => {
                 error.value = responseError // nutze error-ref für die Ausgabe im Template
                 formular.value = false
             } else {
+                toast.add({ severity: 'success', summary: 'Speichern', detail: 'Ihre Daten wurden gespeichert!', life: 5000 })
+                toast.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Versenden der E-Mail!', life: 5050 })
                 data.value = responseData // nutze data-ref für die Ausgabe im Template
                 formular.value = false
             }
@@ -108,6 +115,8 @@ watch(
 
 <template>
     <div>
+        <!-- Toast für Nachrichten-->
+        <Toast position="top-center" />
         <nuxt-link to="/login">Zurück zu Login</nuxt-link>
         <LoginImage />
         <h1>User ist authentifiziert!<br>Formular wird angezeigt</h1>
@@ -130,7 +139,7 @@ watch(
                     <label for="two">Veranstaltung 2</label>
                     <br><br>
                     <select v-model="form.anrede" required>
-                        <option disabled value="">Anrede wählen</option>
+                        <option selected="" disabled="" value="">Anrede wählen</option>
                         <option v-for="option in options" :value="option.value">
                             {{ option.text }}
                         </option>
@@ -142,12 +151,13 @@ watch(
                     <br><br>
                     <input v-model="form.email" name="email" type="email" placeholder="E-Mail eingeben ..." required />
                     <div v-if="pending">Checke E-Mail ...</div>
-                    <div v-if="mailError" class="false">{{ mailError }}</div>
-                    <br><br><br>
+                    <span v-if="mailError" class="false">&nbsp;&nbsp;{{ mailError }}</span>
+                    <br /><br />
+                    <Button type="submit" :disabled="disabled">Speichern</Button>
+                </div>
+                <div class="center-form">
                     Eingabekontrolle<br>
                     <myJson :data="form" :showIcon="true" />
-                    <br><br>
-                    <button type="submit" :disabled="disabled">Speichern</button>
                 </div>
             </form>
         </template>
