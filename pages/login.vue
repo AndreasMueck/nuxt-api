@@ -89,6 +89,7 @@ function enableCustomLayout() {
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
         </div> -->
+        <button @click="enableCustomLayout">Seiten-Layout programmatisch ändern</button>
         <form @submit.prevent="login">
             <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
                 <div class="text-center mb-5">
@@ -115,7 +116,6 @@ function enableCustomLayout() {
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>
         </div>
-        <button @click="enableCustomLayout">Seiten-Layout programmatisch ändern</button>
         <!-- <div class="center-data" v-if="data">
             <h1>DATA:</h1>
             <myJson :data="data" :showIcon="true" />
