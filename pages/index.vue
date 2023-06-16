@@ -20,18 +20,18 @@ useHead({
 const postUrl = 'http://directus8/huawei/items/golfcup2023'
 
 // Allgemeine reactive Variablen
-const error = ref()
-const data = ref()
-const pending = ref()
-const showForm = ref(true)
-const mailError = ref('')
-const isOff = ref(true)
+const error = ref() // Error
+const data = ref() // Daten
+const pending = ref() // In Bearbeitung
+const showForm = ref(true) // Zeige Form
+const mailError = ref('') // Fehlermeldung für E-Mail-Eingabe Fehler
+const btnDisabled = ref(true); // Speichern Button default: deaktiviert
 
-// Select-Optionen Anrede im Formular
-const optionsAnrede = ref([
+// Select-Optionen Anrede im Formular, muss nicht reactive sein, daher kein ref oder reactive object
+const optionsAnrede = [
     { value: 'Frau', text: 'Frau' },
     { value: 'Herr', text: 'Herr' }
-])
+]
 
 // Form Daten in reactives Object form
 const form = reactive({
@@ -42,11 +42,8 @@ const form = reactive({
     email: ''
 })
 
-// Anmelden-Button ist ohne gültige Eingabedaten deaktiviert
-const disabled = computed(() => isOff.value);
-
 // Sende Daten an Server
-const post = async () => {
+const onSubmit = async () => {
     const accessToken = useState('accessToken')
 
     await useLazyFetch(postUrl, {
@@ -81,9 +78,18 @@ const post = async () => {
 
 }
 
-watchEffect(() => {
-    console.log('Anrede: ', form.anrede); // Value von Option
-});
+function validateField(value) {
+    if (!value) {
+        return 'Value is required.';
+    }
+
+    return true;
+}
+
+
+// watchEffect(() => {
+//     console.log('Anrede: ', form.anrede); // Value von Option in Anrede
+// });
 
 watch(
     () => form.email,
@@ -102,15 +108,15 @@ watch(
             })
             if (data.value) { // data.value ist nicht leer, ergo E-Mail ist vorhanden
                 mailError.value = ('Email ist bereits vorhanden')
-                isOff.value = true
+                btnDisabled.value = true;
             } else {
-                isOff.value = false
+                btnDisabled.value = false;
             }
 
         } else {
             console.log('Nope')
             mailError.value = ('Bitte eine gültige Email eingeben')
-            isOff.value = true
+            btnDisabled.value = true;
         }
     }
 )
@@ -136,7 +142,7 @@ watch(
             <div class="false message">{{ error }}</div>
         </template>
         <template v-if="showForm">
-            <form @submit.prevent="post">
+            <form @submit.prevent="onSubmit">
                 <div class="center-form">
                     <h3>User ist authentifiziert, Formular wird angezeigt!</h3>
                     <div class="flex flex-wrap gap-3">
@@ -155,6 +161,14 @@ watch(
                     <Dropdown v-model="form.anrede" :options="optionsAnrede" optionLabel="value" optionValue="text"
                         placeholder="Anrede wählen ..." required class="w-full md:w-14rem" />
                     <br><br>
+
+                    <!-- <div class="p-inputgroup flex-1 md:w-14rem">
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                        </span>
+                        <InputText type="text" v-model="form.name" name="name" placeholder="name" required />
+                    </div> -->
+
                     <span class="p-input-icon-left">
                         <i class="pi pi-user" />
                         <InputText type="text" v-model="form.name" name="name" placeholder="name" required
@@ -172,11 +186,15 @@ watch(
                         <InputText type="text" v-model="form.email" name="email" placeholder="E-Mail eingeben ..." required
                             class="w-full md:w-14rem" />
                     </span>
-                    <!-- <input v-model="form.email" name="email" type="email" placeholder="E-Mail eingeben ..." required /> -->
                     <div v-if="pending">Checke E-Mail ...</div>
                     <span v-if="mailError" class="false">&nbsp;&nbsp;{{ mailError }}</span>
                     <br /><br />
-                    <Button type="submit" :disabled="disabled">Speichern</Button>
+
+                    <div class="button-bar">
+                        <!--<Button type="submit" :disabled="disabled">Speichern</Button>-->
+                        <Button type="submit" :disabled="btnDisabled" label="Speichern" icon="pi pi-save"></Button>
+                    </div>
+
                 </div>
                 <div class="center-form-green">
                     Eingabekontrolle<br>

@@ -108,7 +108,10 @@ function enableCustomLayout() {
                     <input id="password" type="password" v-model.lazy="formBody.password" autocomplete="off"
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
                 </div>
-                <Button type="submit" label="Anmelden" icon="pi pi-user" class="w-full"></Button>
+                <div class="button-bar">
+                    <Button type="submit" label="Anmelden" icon="pi pi-user"></Button>
+                    <!-- <Button label="Reset" type="reset" icon="pi pi-times" class="p-button-secondary" /> -->
+                </div>
             </div>
         </form>
         <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
@@ -134,10 +137,17 @@ function enableCustomLayout() {
         <div>
             <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes (id,class,style)</ButtonTest>
         </div> -->
+        <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
     </div>
 </template>
 
 <style>
+.button-bar {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
 .center-data {
     margin: auto;
     width: 50%;
