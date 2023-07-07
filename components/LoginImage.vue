@@ -1,5 +1,5 @@
 <template>
-    <img src="~/assets/login-page.png" alt="Login Image" />
+    <img src="/images/login-page.png" alt="Login-Icon" title="Tooltip1" />
 </template>
 
 <style scoped>
@@ -11,6 +11,6 @@ img {
 }
 
 img:hover {
-    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    box-shadow: 0 0 2px 1px rgba(12, 65, 83, 0.5);
 }
 </style>

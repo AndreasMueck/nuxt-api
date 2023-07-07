@@ -11,10 +11,12 @@ const accessToken = useState('accessToken');
         <h4>{{ accessToken }}</h4>
         <!--<Camera name="Sony A7RIV" img="/images/sony.jpg" /> name/img sind props im child -->
     </div>
-    <nuxt-img sizes="sm:100px md:200px lg:300px" src="/images/sony.jpg" />
+    <h1>Grösse ändert sich je nach Screen und von jpg -> png</h1>
+    <nuxt-img sizes="sm:100px md:200px lg:300px xl:350px" preset="avatar" src="/images/sony.jpg" />
     <!-- <nuxt-img sizes="sm:100px md:200px lg:300px" preset="avatar" src="/images/sony.jpg" /> -->
     <div class="back1">
-        <nuxt-img format="webp" class="responsive" src="/images/sony.jpg" />
+        <h1>quality: 1, format: webp</h1>
+        <nuxt-picture format="webp" src="/images/sony.jpg" />
     </div>
 </template>
 
@@ -34,6 +36,6 @@ const accessToken = useState('accessToken');
     margin-right: auto;
     max-width: 100%;
     height: auto;
-    border-radius: 50%;
+    border-radius: 10%;
 }
 </style>

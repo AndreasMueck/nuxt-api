@@ -1,0 +1,13 @@
+@use '_fonts.scss';
+
+:root {
+  --font-family:-apple-system, Lato, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+}

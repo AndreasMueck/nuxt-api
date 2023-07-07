@@ -1,20 +1,20 @@
 <script setup>
 import { ref, useLazyFetch } from "#imports";
-import { useToast } from 'primevue/usetoast'
-const toast = useToast()
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
 
-const accessToken = useState('accessToken', () => ''); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
-const isAuthenticated = useState('authenticated', () => false); // User ist nicht authentifiziert
+const accessToken = useState("accessToken", () => ""); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
+const isAuthenticated = useState("authenticated", () => false); // User ist nicht authentifiziert
 
-const authUrl = 'http://directus8/huawei/auth/authenticate'
+const authUrl = "http://directus8/huawei/auth/authenticate";
 
 definePageMeta({
     layout: "custom",
-})
+});
 
 useHead({
-    title: 'Login Auth'
-})
+    title: "Login Auth",
+});
 
 // composables testing
 // const hello = useHello()
@@ -27,59 +27,92 @@ const error = ref();
 const formBody = ref({
     // Werte initialiseren die Input Felder -> automatisch ausgefüllt
     //email: 'golfcup2023@wak-online.de',
-    email: 'golfcup2023',
-    password: 'handicap'
+    email: "golfcup2023",
+    password: "handicap",
 });
 
-const requestBody = ref({ // Diese Angaben gehen in den Request-Body
-    email: '',
-    password: ''
+const requestBody = ref({
+    // Diese Angaben gehen in den Request-Body
+    email: "",
+    password: "",
 });
 
 const login = async () => {
+    loading.value = true;
 
-    requestBody.value.email = formBody.value.email + '@wak-online.de'
-    requestBody.value.password = formBody.value.password
+    requestBody.value.email = formBody.value.email + "@wak-online.de";
+    requestBody.value.password = formBody.value.password;
 
     const requestOptions = {
-        method: 'POST',
-        body: requestBody
-    }
+        method: "POST",
+        body: requestBody,
+    };
 
     //const { data, error } = await useLazyFetch(authUrl, {
-    await useLazyFetch(authUrl, requestOptions)
-        .then(response => {
-            // response object: data, error, execute, pending, refresh
-            const responseData = response.data.value
-            const responseError = response.error.value
-            if (responseError) {
-                error.value = responseError // nutze error-ref für die Ausgabe im Template
-                toast.add({
-                    severity: 'error',
-                    summary: 'Fehler',
-                    detail: 'Ungültige Anmeldedaten',
-                    life: 5000
-                })
-            } else {
-                data.value = responseData // nutze data-ref für die Ausgabe im Template
-                accessToken.value = responseData.data.token // schreibe das gelieferte Access Token in useState
-                isAuthenticated.value = true // isAuthenticated flag wird gesetzt. User ist authentifiziert und kann das Formular ausfüllen
-                return navigateTo('/'); // redirect auf die Formularseite
-            }
-        })
+    await useLazyFetch(authUrl, requestOptions).then((response) => {
+        // response object: data, error, execute, pending, refresh
+        const responseData = response.data.value;
+        const responseError = response.error.value;
+        if (responseError) {
+            loading.value = false;
+            error.value = responseError; // nutze error-ref für die Ausgabe im Template
+            toast.add({
+                severity: "error",
+                summary: "Fehler",
+                detail: "Ungültige Anmeldedaten",
+                life: 5000,
+            });
+        } else {
+            data.value = responseData; // nutze data-ref für die Ausgabe im Template
+            accessToken.value = responseData.data.token; // schreibe das gelieferte Access Token in useState
+            isAuthenticated.value = true; // isAuthenticated flag wird gesetzt. User ist authentifiziert und kann das Formular ausfüllen
+            return navigateTo("/"); // redirect auf die Formularseite, da User authentifiziert ist
+        }
+    });
+};
+
+const label = ref("Provided: Absenden");
+provide("key", label); // Deaktivieren dann wird default im Inject genommen
+
+function changeLayout() {
+    setPageLayout("default");
 }
-
-const label = ref('Provided: Absenden')
-provide('key', label) // Deaktivieren dann wird default im Inject genommen
-
-function enableCustomLayout() {
-    setPageLayout('default')
-}
-
-
+// Button Lade-Status ja/nein
+const loading = ref(false);
 </script>
 
 <template>
+    <div class="card">
+        <div class="flex justify-content-center flex-wrap card-container blue-container">
+            <div class="card sm:w-9 md:w-6">
+                <form @submit.prevent="login">
+                    <div>
+                        <div>
+                            <LoginImage />
+                            <div>
+                                Anmelden (Test mit PrimeVue / Theme: saga-blue / Lato font)
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="username">Benutzername</label>
+                            <input id="username" type="text" v-model.lazy="formBody.email"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                        </div>
+                        <div class="field">
+                            <label for="password">Passwort</label>
+                            <input id="password" type="password" v-model.lazy="formBody.password" autocomplete="off"
+                                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+                        </div>
+                        <div class="button-bar">
+                            <Button type="submit" label="Anmelden" icon="pi pi-user" :loading="loading"></Button>
+                            <Button type="reset" label="Reset" icon="pi pi-times" class="p-button-secondary" />
+                            <Button label="Layout ändern" class="bg-indigo-100" @click="changeLayout"></Button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div>
         <!-- Toast für Nachrichten-->
         <Toast position="top-center" />
@@ -89,31 +122,6 @@ function enableCustomLayout() {
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
         </div> -->
-        <button @click="enableCustomLayout">Seiten-Layout programmatisch ändern</button>
-        <form @submit.prevent="login">
-            <div class="surface-card p-4 shadow-2 border-round w-full lg:w-6">
-                <div class="text-center mb-5">
-                    <LoginImage />
-                    <div class="text-900 text-3xl font-medium mb-3">Anmelden (Test mit PrimeVue / Theme: saga-blue / Lato
-                        font)
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="username">Benutzername</label>
-                    <input id="username" type="text" v-model.lazy="formBody.email"
-                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
-                </div>
-                <div class="field">
-                    <label for="password">Passwort</label>
-                    <input id="password" type="password" v-model.lazy="formBody.password" autocomplete="off"
-                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
-                </div>
-                <div class="button-bar">
-                    <Button type="submit" label="Anmelden" icon="pi pi-user"></Button>
-                    <!-- <Button label="Reset" type="reset" icon="pi pi-times" class="p-button-secondary" /> -->
-                </div>
-            </div>
-        </form>
         <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
         <!-- <p>Token:{{ accessToken }}</p>-->
         <div class="center-data" v-if="pending">
@@ -136,12 +144,16 @@ function enableCustomLayout() {
         <MainButton childclass="button rot">Roter Button ohne fallthrough attributes (hier mit props)</MainButton>
         <div>
             <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes (id,class,style)</ButtonTest>
-        </div> -->
-        <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
+        </div>-->
+        <div>
+            <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
+            <nuxt-link to="/radio">Radio</nuxt-link><br />
+            <nuxt-link to="/vee">Vee</nuxt-link><br />
+        </div>
     </div>
 </template>
 
-<style>
+<style scoped>
 .button-bar {
     margin-top: 20px;
     display: flex;

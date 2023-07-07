@@ -3,6 +3,7 @@
         <h1 class="text-h4 text-weight-bold">PrimeVue + vee-validate v4</h1>
         <div class="q-mt-md q-gutter-md" style="max-width: 300px">
             <Form :validation-schema="schema" @submit="onSubmit">
+
                 <!-- This uses a Higher-order component approach -->
                 <Field name="email" v-slot="{ field, errorMessage }">
                     <div class="field">
@@ -73,7 +74,7 @@ const tenureOptions = ['Yearly', 'Monthly', 'Quartarly'].map((o) => ({
 }));
 </script>
 
-<style>
+<style scoped>
 body {
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
         Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;

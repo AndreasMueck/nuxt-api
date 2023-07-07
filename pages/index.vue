@@ -1,5 +1,4 @@
 <script setup>
-
 import { useToast } from 'primevue/usetoast'
 const toast = useToast()
 
@@ -29,8 +28,9 @@ const btnDisabled = ref(true); // Speichern Button default: deaktiviert
 
 // Select-Optionen Anrede im Formular, muss nicht reactive sein, daher kein ref oder reactive object
 const optionsAnrede = [
+    { value: 'Neutral', text: 'Keine Angabe' },
     { value: 'Frau', text: 'Frau' },
-    { value: 'Herr', text: 'Herr' }
+    { value: 'Herr', text: 'Herr' },
 ]
 
 // Form Daten in reactives Object form
@@ -125,7 +125,8 @@ watch(
 
 <template>
     <div>
-        <nuxt-link to="/login">Zurück zu Login</nuxt-link>
+        <nuxt-link to="/login">Zurück zu Login</nuxt-link><br />
+        <nuxt-link to="/vee1">Hin zu vee1</nuxt-link>
         <LoginImage />
         <template v-if="data">
             <div class="center-form">
@@ -145,29 +146,23 @@ watch(
             <form @submit.prevent="onSubmit">
                 <div class="center-form">
                     <h3>User ist authentifiziert, Formular wird angezeigt!</h3>
+
                     <div class="flex flex-wrap gap-3">
-                        <div class="flex align-items-center">
+                        <div class="flex">
                             <RadioButton v-model="form.veranstaltung" id="event1" inputId="event1" name="form.veranstaltung"
                                 value="Veranstaltung 111" required />
                             <label for="event1" class="ml-2">Veranstaltung 1</label>
                         </div>
-                        <div class="flex align-items-center">
+                        <div class="flex">
                             <RadioButton v-model="form.veranstaltung" id="event2" inputId="event2" name="form.veranstaltung"
                                 value="Veranstaltung 222" />
                             <label for="event2" class="ml-2">Veranstaltung 2</label>
                         </div>
                     </div>
                     <br><br>
-                    <Dropdown v-model="form.anrede" :options="optionsAnrede" optionLabel="value" optionValue="text"
+                    <Dropdown v-model="form.anrede" :options="optionsAnrede" optionLabel="text" optionValue="value"
                         placeholder="Anrede wählen ..." required class="w-full md:w-14rem" />
                     <br><br>
-
-                    <!-- <div class="p-inputgroup flex-1 md:w-14rem">
-                        <span class="p-inputgroup-addon">
-                            <i class="pi pi-user"></i>
-                        </span>
-                        <InputText type="text" v-model="form.name" name="name" placeholder="name" required />
-                    </div> -->
 
                     <span class="p-input-icon-left">
                         <i class="pi pi-user" />

@@ -1,13 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxt/image-edge', '@nuxt/content', '@vee-validate/nuxt'],
+    modules: ['@nuxt/image', '@nuxt/content', '@vee-validate/nuxt'],
     css: [
-        'vue-json-pretty/lib/styles.css',
-        'primevue/resources/primevue.css',
-        'primevue/resources/themes/saga-blue/theme.css',
-        'primeicons/primeicons.css',
-        'primeflex/primeflex.css',
-        '@/assets/_theme.scss'
+        'vue-json-pretty/lib/styles.css', // vue-json-pretty Darstellung
+        'primevue/resources/primevue.css', // primevue
+        'primevue/resources/themes/saga-blue/theme.css', // primevue thema
+        'primeicons/primeicons.css', // icons von primevue
+        'primeflex/primeflex.css', // css utilities von primevue
+        '@/assets/sass/theme.scss' // eigenes stylesheet
     ],
     build: {
         transpile: ['primevue']
@@ -20,8 +20,8 @@ export default defineNuxtConfig({
         presets: {
             avatar: {
                 modifiers: {
-                    format: 'jpg',
-                    quality: '60',
+                    format: 'png',
+                    quality: '50',
                 }
             }
         },
