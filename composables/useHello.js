@@ -1,3 +1,3 @@
 export const useHello = () => { // named export
-    return useState('hello', () => 'Hello world') // useState ist NICHT reaktiv
+    return useState('hello', () => 'Hello world composable test aus named Export') // useState ist NICHT reaktiv
    }

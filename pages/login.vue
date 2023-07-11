@@ -8,17 +8,17 @@ const isAuthenticated = useState("authenticated", () => false); // User ist nich
 
 const authUrl = "http://directus8/huawei/auth/authenticate";
 
-definePageMeta({
-    layout: "custom",
-});
-
 useHead({
     title: "Login Auth",
 });
 
+definePageMeta({
+    layout: "custom",
+});
+
 // composables testing
-// const hello = useHello()
-// const helloWorld = useHelloWorld()
+const hello = useHello() // export named
+const helloMars = useHelloMars() // export unnamed -> Dateiname wird zum Funktionsnamen
 
 const pending = ref();
 const data = ref();
@@ -77,12 +77,14 @@ provide("key", label); // Deaktivieren dann wird default im Inject genommen
 function changeLayout() {
     setPageLayout("default");
 }
+
 // Button Lade-Status ja/nein
 const loading = ref(false);
 </script>
 
 <template>
-    <div class="card">
+    <div class="card" v-bind="$attrs">
+        <!-- Test wegen props-übergabe in app.vue - in diesem Div will ich die attrs benutzen -->
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
                 <form @submit.prevent="login">
@@ -106,7 +108,7 @@ const loading = ref(false);
                         <div class="button-bar">
                             <Button type="submit" label="Anmelden" icon="pi pi-user" :loading="loading"></Button>
                             <Button type="reset" label="Reset" icon="pi pi-times" class="p-button-secondary" />
-                            <Button label="Layout ändern" class="bg-indigo-100" @click="changeLayout"></Button>
+                            <Button label="Layout ändern" severity="danger" outlined rounded @click="changeLayout"></Button>
                         </div>
                     </div>
                 </form>
@@ -121,8 +123,9 @@ const loading = ref(false);
             Error status message: {{ error.statusMessage }}<br>
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
-        </div> -->
-        <!-- <p>COMPOSABLES TEST {{ hello }}</p><p>{{ helloWorld }}</p> -->
+            </div> -->
+        <p>COMPOSABLES TEST<br />
+            {{ hello }}<br />{{ helloMars }}</p>
         <!-- <p>Token:{{ accessToken }}</p>-->
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>

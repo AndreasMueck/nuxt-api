@@ -1,5 +1,15 @@
 <script setup>
+
+// function meinGruss() {
+//     world.value = 'Hallo Mars'
+// }
+
 const accessToken = useState('accessToken');
+const world = ref('Hallo Welt')
+
+//const myTimeout = setTimeout(meinGruss, 2000);
+
+
 </script>
 
 <template>
@@ -9,7 +19,7 @@ const accessToken = useState('accessToken');
         <nuxt-link to="/">Formularseite (index.vue)</nuxt-link>
         <div class="a">Dieser Text enthält a Selektor </div>
         <h4>{{ accessToken }}</h4>
-        <!--<Camera name="Sony A7RIV" img="/images/sony.jpg" /> name/img sind props im child -->
+        <AppCamera name="Sony A7RIV" img="/images/sony.jpg" :hello-world="world" /> <!-- name/img sind props im child -->
     </div>
     <h1>Grösse ändert sich je nach Screen und von jpg -> png</h1>
     <nuxt-img sizes="sm:100px md:200px lg:300px xl:350px" preset="avatar" src="/images/sony.jpg" />

@@ -1,6 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxt/image', '@nuxt/content', '@vee-validate/nuxt'],
+    modules: [
+        '@nuxt/image',
+        '@nuxt/content',
+        '@vee-validate/nuxt'
+    ],
     css: [
         'vue-json-pretty/lib/styles.css', // vue-json-pretty Darstellung
         'primevue/resources/primevue.css', // primevue
@@ -10,7 +14,7 @@ export default defineNuxtConfig({
         '@/assets/sass/theme.scss' // eigenes stylesheet
     ],
     build: {
-        transpile: ['primevue']
+        transpile: ['primevue'],
     },
     //ssr: false,
     experimental: {
