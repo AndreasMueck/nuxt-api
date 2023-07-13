@@ -52,31 +52,31 @@ const requestBody = ref({
     password: "",
 });
 
-const loading = ref(false); // Spin loader in button AUS
-
 const login = async () => {
-    loading.value = true; // Spin loader in button AN
+    loading.value = true;
+
     requestBody.value.email = formBody.value.email + "@wak-online.de";
     requestBody.value.password = formBody.value.password;
 
     const requestOptions = {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
         body: requestBody,
     };
 
     //const { data, error } = await useLazyFetch(authUrl, {
     await useLazyFetch(authUrl, requestOptions).then((response) => {
         // response object: data, error, execute, pending, refresh
-
         const responseData = response.data.value;
         const responseError = response.error.value;
         if (responseError) {
-            loading.value = false; // Spin loader in button AUS
+            loading.value = false;
             error.value = responseError; // nutze error-ref für die Ausgabe im Template
-            toast.add({ severity: "error", summary: "Fehler", detail: "Ungültige Anmeldedaten", life: 5000 });
+            toast.add({
+                severity: "error",
+                summary: "Fehler",
+                detail: "Ungültige Anmeldedaten",
+                life: 5000,
+            });
         } else {
             data.value = responseData; // nutze data-ref für die Ausgabe im Template
             accessToken.value = responseData.data.token; // schreibe das gelieferte Access Token in useState
@@ -89,11 +89,8 @@ const login = async () => {
 const label = ref("Provided: Absenden");
 provide("key", label); // Deaktivieren dann wird default im Inject genommen
 
-const isTrue = ref(false)
-
-const AppTable = resolveComponent('AppTable')
-const AppTabulator = resolveComponent('AppTabulator')
-
+// Button Lade-Status ja/nein
+const loading = ref(false);
 </script>
 
 <template>
@@ -137,12 +134,12 @@ const AppTabulator = resolveComponent('AppTabulator')
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
             </div> -->
-        <!--<p>COMPOSABLES TEST<br />
+        <p>COMPOSABLES TEST<br />
             {{ hello }}<br />{{ helloMars }}</p>
-        <p>Token:{{ accessToken }}</p>
+        <!-- <p>Token:{{ accessToken }}</p>-->
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>
-        </div> -->
+        </div>
         <!-- <div class="center-data" v-if="data">
             <h1>DATA:</h1>
             <myJson :data="data" :showIcon="true" />
@@ -161,16 +158,10 @@ const AppTabulator = resolveComponent('AppTabulator')
         <div>
             <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes (id,class,style)</ButtonTest>
         </div>-->
-        <!--<div>
+        <div>
             <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
             <nuxt-link to="/radio">Radio</nuxt-link><br />
             <nuxt-link to="/vee">Vee</nuxt-link><br />
-        </div>--><br />
-        <div class="flex justify-content-center flex-wrap card-container blue-container">
-            <div class="card sm:w-9 md:w-6">
-                <component :is="isTrue ? AppTable : AppTabulator"></component><br />
-                <button @click="isTrue = !isTrue">Toggle die Komponente</button><br />
-            </div>
         </div>
     </div>
 </template>

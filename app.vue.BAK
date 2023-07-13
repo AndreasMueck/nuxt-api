@@ -1,6 +1,7 @@
 <template>
   <div>
     <NuxtPage />
+    <!-- <NuxtPage :foobar="123" /> -->
   </div>
 </template>
 

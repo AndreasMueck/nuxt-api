@@ -19,11 +19,10 @@ const world = ref('Hallo Welt')
         <nuxt-link to="/">Formularseite (index.vue)</nuxt-link>
         <div class="a">Dieser Text enthält a Selektor </div>
         <h4>{{ accessToken }}</h4>
-        <AppCamera name="Sony A7RIV" img="/images/sony.jpg" :hello-world="world" /> <!-- name/img sind props im child -->
+        <!-- <AppCamera name="Sony A7RIV" img="/images/sony.jpg" :hello-world="world" /> name/img sind props im child -->
     </div>
     <h1>Grösse ändert sich je nach Screen und von jpg -> png</h1>
     <nuxt-img sizes="sm:100px md:200px lg:300px xl:350px" preset="avatar" src="/images/sony.jpg" />
-    <!-- <nuxt-img sizes="sm:100px md:200px lg:300px" preset="avatar" src="/images/sony.jpg" /> -->
     <div class="back1">
         <h1>quality: 1, format: webp</h1>
         <nuxt-picture format="webp" src="/images/sony.jpg" />

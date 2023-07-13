@@ -3,10 +3,10 @@ import { ref, useLazyFetch } from "#imports";
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 
+const bem = useBem("block")
+
 const accessToken = useState("accessToken", () => ""); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
 const isAuthenticated = useState("authenticated", () => false); // User ist nicht authentifiziert
-
-const authUrl = "http://directus8/huawei/auth/authenticate";
 
 useHead({
     link: [{ rel: 'canonical', href: 'http://localhost:3000/' }],
@@ -46,57 +46,62 @@ const formBody = ref({
     password: "handicap",
 });
 
-const requestBody = ref({
+const requestBody = {
     // Diese Angaben gehen in den Request-Body
     email: "",
     password: "",
-});
+}
 
-const loading = ref(false); // Spin loader in button AUS
+const loading = ref(false); // Spin loader in button AUS - default
+const authUrl = "http://directus8/huawei/auth/authenticate"
 
 const login = async () => {
+
     loading.value = true; // Spin loader in button AN
-    requestBody.value.email = formBody.value.email + "@wak-online.de";
-    requestBody.value.password = formBody.value.password;
+
+    requestBody.email = formBody.value.email + "@wak-online.de";
+    requestBody.password = formBody.value.password;
 
     const requestOptions = {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: requestBody,
+        body: JSON.stringify(requestBody),
     };
 
-    //const { data, error } = await useLazyFetch(authUrl, {
-    await useLazyFetch(authUrl, requestOptions).then((response) => {
-        // response object: data, error, execute, pending, refresh
+    try {
+        const response = await fetch(authUrl, requestOptions);
 
-        const responseData = response.data.value;
-        const responseError = response.error.value;
-        if (responseError) {
-            loading.value = false; // Spin loader in button AUS
-            error.value = responseError; // nutze error-ref für die Ausgabe im Template
-            toast.add({ severity: "error", summary: "Fehler", detail: "Ungültige Anmeldedaten", life: 5000 });
+        if (!response.ok) { // Nur wenn resource erreichbar ist, dann erscheint diese Fehler-Meldung, wenn z.B. der Server down ist, dann nicht
+            const message = `RESPONSE NOT OK: ${response.status}`
+            throw new Error(message) // Execution of the current function will stop and control will be passed to the first catch block in the call stack.
         } else {
-            data.value = responseData; // nutze data-ref für die Ausgabe im Template
-            accessToken.value = responseData.data.token; // schreibe das gelieferte Access Token in useState
-            isAuthenticated.value = true; // isAuthenticated flag wird gesetzt. User ist authentifiziert und kann das Formular ausfüllen
-            return navigateTo("/"); // redirect auf die Formularseite, da User authentifiziert ist
+            loading.value = false;
+            toast.add({ severity: "success", summary: "Erfolg", detail: "Die Anmeldung hat funktioniert.", life: 5000 });
+            const data = await response.json(); // returns a promise resolved to a JSON object
+            console.log(data);
         }
-    });
+
+    } catch (error) { // Fehlermeldung erscheint auch dann wenn Resource nicht erreichbar
+        console.log('Fehlermeldung: ', error);
+        console.log('Fehlermeldung: ', error.name);
+        loading.value = false;
+        toast.add({ severity: "error", summary: "Fehler", detail: "Es ist ein Fehler aufgetreten. Siehe Console.", life: 5000 });
+    }
+
+
+
 };
-
-const label = ref("Provided: Absenden");
-provide("key", label); // Deaktivieren dann wird default im Inject genommen
-
-const isTrue = ref(false)
-
-const AppTable = resolveComponent('AppTable')
-const AppTabulator = resolveComponent('AppTabulator')
 
 </script>
 
 <template>
+    <div>
+        <div v-if="pending">Loading...</div>
+        <div v-else-if="data">Todos: {{ data }}</div>
+        <div v-else-if="error">Error: {{ error }}</div>
+    </div>
     <div class="card">
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
@@ -137,12 +142,12 @@ const AppTabulator = resolveComponent('AppTabulator')
             Error code: {{ error.data.error.code }}<br>
             Error message: {{ error.data.error.message }}
             </div> -->
-        <!--<p>COMPOSABLES TEST<br />
+        <p>COMPOSABLES TEST<br />
             {{ hello }}<br />{{ helloMars }}</p>
-        <p>Token:{{ accessToken }}</p>
+        <!-- <p>Token:{{ accessToken }}</p>-->
         <div class="center-data" v-if="pending">
             <h1>Loading spinner ...</h1>
-        </div> -->
+        </div>
         <!-- <div class="center-data" v-if="data">
             <h1>DATA:</h1>
             <myJson :data="data" :showIcon="true" />
@@ -161,16 +166,10 @@ const AppTabulator = resolveComponent('AppTabulator')
         <div>
             <ButtonTest class="gruen" id="test">Grüner Button mit fallthrough attributes (id,class,style)</ButtonTest>
         </div>-->
-        <!--<div>
+        <div>
             <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
             <nuxt-link to="/radio">Radio</nuxt-link><br />
             <nuxt-link to="/vee">Vee</nuxt-link><br />
-        </div>--><br />
-        <div class="flex justify-content-center flex-wrap card-container blue-container">
-            <div class="card sm:w-9 md:w-6">
-                <component :is="isTrue ? AppTable : AppTabulator"></component><br />
-                <button @click="isTrue = !isTrue">Toggle die Komponente</button><br />
-            </div>
         </div>
     </div>
 </template>
