@@ -13,6 +13,7 @@ import Column from 'primevue/column'
 
 export default defineNuxtPlugin(nuxtApp => {
     nuxtApp.vueApp.use(PrimeVue, { inputStyle: "filled" })
+    //nuxtApp.vueApp.use(PrimeVue, { unstyled: true })
     nuxtApp.vueApp.use(ToastService)
     nuxtApp.vueApp.component('Button', Button)
     nuxtApp.vueApp.component('InputText', InputText)

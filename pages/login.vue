@@ -1,6 +1,11 @@
 <script setup>
 import { ref, useLazyFetch } from "#imports";
 import { useToast } from "primevue/usetoast";
+
+import { KachelService } from '@/service/KachelService';
+
+const kacheln = KachelService;
+
 const toast = useToast();
 
 const accessToken = useState("accessToken", () => ""); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
@@ -8,9 +13,16 @@ const isAuthenticated = useState("authenticated", () => false); // User ist nich
 
 const authUrl = "http://directus8/huawei/auth/authenticate";
 
+const isActive = ref(false)
+
 useHead({
     link: [{ rel: 'canonical', href: 'http://localhost:3000/' }],
     htmlAttrs: { lang: 'de' },
+    bodyAttrs: {
+        class: computed(() => { // Background auf Klick ändern
+            return (isActive.value ? 'backclass' : '')
+        })
+    }
 });
 
 useSeoMeta({
@@ -100,14 +112,15 @@ const AppTabulator = resolveComponent('AppTabulator')
     <div class="card">
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
-                <h1>Hier sehen Sie eine H1 Headline</h1>
+                <h1>Login</h1>
+                <div>
+                    ( UI: PrimeVue / Theme: saga-blue / Font: Lato )
+                </div>
                 <form @submit.prevent="login">
                     <div>
                         <div>
                             <LoginImage />
-                            <div>
-                                Anmelden (Test mit PrimeVue / Theme: saga-blue / Lato font)
-                            </div>
+
                         </div>
                         <div class="field">
                             <label for="username">Benutzername</label>
@@ -122,6 +135,10 @@ const AppTabulator = resolveComponent('AppTabulator')
                         <div class="button-bar">
                             <Button type="submit" label="Anmelden" icon="pi pi-user" :loading="loading"></Button>
                             <Button type="reset" label="Reset" icon="pi pi-times" class="p-button-secondary" />
+                            <Button label="Background ändern" class="p-button-secondary" @click="isActive = !isActive" />
+                        </div>
+                        <div>
+                            <p :class="{ gross: isActive }">Farbe geändert</p>
                         </div>
                     </div>
                 </form>
@@ -129,8 +146,6 @@ const AppTabulator = resolveComponent('AppTabulator')
         </div>
     </div>
     <div>
-        <!-- Toast für Nachrichten-->
-        <Toast position="bottom-right" />
         <!-- <div class="center-error" v-if="error">
             Error status code: {{ error.statusCode }}<br>
             Error status message: {{ error.statusMessage }}<br>
@@ -172,10 +187,51 @@ const AppTabulator = resolveComponent('AppTabulator')
                 <button @click="isTrue = !isTrue">Toggle die Komponente</button><br />
             </div>
         </div>
+        <FooBar>
+            <template #content="{ title, title1 }">
+                Return von Kind-Komponente FooBar: {{ title }}<br />
+                Return von Kind-Komponente FooBar: {{ title1 }}
+            </template>
+        </FooBar>
+
+        <div>
+            <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--lrg">
+                <li class="kachelnwidget__item.kachelnwidget__item--lrg" v-for="item in kacheln.kachelnLrg">
+                    <a class="kachelnwidget__link" :href="item.url">
+                        <img class="kachelnwidget__img" :src="item.img" />
+                    </a>
+                </li>
+            </ul>
+            <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--md">
+                <li class="kachelnwidget__item.kachelnwidget__item--md" v-for="item in kacheln.kachelnMd">
+                    <a class="kachelnwidget__link" :href="item.url">
+                        <img class="kachelnwidget__img" :src="item.img" />
+                    </a>
+                </li>
+            </ul>
+            <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--sml">
+                <li class="kachelnwidget__item.kachelnwidget__item--sml" v-for="item in kacheln.kachelnSml">
+                    <a class="kachelnwidget__link" :href="item.url">
+                        <img class="kachelnwidget__img" :src="item.img" />
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <VideoFullwidth filename="placeholder" />
     </div>
 </template>
 
+<style>
+.backclass {
+    background-color: #ff0;
+}
+</style>
+
 <style scoped>
+.gross {
+    font-size: 30px;
+}
+
 .button-bar {
     margin-top: 20px;
     display: flex;

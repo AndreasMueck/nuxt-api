@@ -15,7 +15,7 @@
     align-items: center;
     flex-direction: column;
     width: 100%;
-    background-color: lightgreen;
+    background-color: lightblue;
     color: white;
 }
 </style>

@@ -1,11 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    devtools: {
+        enabled: false
+    },
     modules: [
         '@nuxt/image',
         '@nuxt/content',
-        '@vee-validate/nuxt'
+        '@vee-validate/nuxt',
     ],
-
     css: [
         'vue-json-pretty/lib/styles.css', // vue-json-pretty Darstellung
         'primevue/resources/primevue.css', // primevue
@@ -14,16 +16,13 @@ export default defineNuxtConfig({
         'primeflex/primeflex.css', // css utilities von primevue
         '@/assets/sass/theme.scss' // eigenes stylesheet
     ],
-
     build: {
         transpile: ['primevue'],
     },
-
     //ssr: false,
     experimental: {
         payloadExtraction: false
     },
-
     image: {
         presets: {
             avatar: {
@@ -33,6 +32,7 @@ export default defineNuxtConfig({
                 }
             }
         },
+        format: ['webp'],
         screens: {
             xs: 320,
             sm: 640,
@@ -42,8 +42,4 @@ export default defineNuxtConfig({
             xxl: 1536,
         }
     },
-
-    devtools: {
-        enabled: false
-    }
 })

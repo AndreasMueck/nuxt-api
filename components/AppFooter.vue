@@ -2,6 +2,7 @@
     <div class="foot">
         <p>FOOTER</p>
     </div>
+    <Toast position="bottom-right" />
 </template>
 
 <style>
@@ -11,7 +12,7 @@
     align-items: center;
     width: 100%;
     /* height: 100px; */
-    background-color: grey;
+    background-color: lightgrey;
     color: white;
 }
 </style>

@@ -107,7 +107,7 @@ watch(
                 headers: { 'Authorization': 'Bearer ' + accessToken.value }
             })
             if (data.value) { // data.value ist nicht leer, ergo E-Mail ist vorhanden
-                mailError.value = ('Email ist bereits vorhanden')
+                mailError.value = ('Email ist bereits registriert')
                 btnDisabled.value = true;
             } else {
                 btnDisabled.value = false;

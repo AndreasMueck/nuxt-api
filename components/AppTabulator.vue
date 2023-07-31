@@ -2,8 +2,8 @@
 
 <template>
   <div class="card">
-    <Accordion :activeIndex="0">
-      <AccordionTab header="Header I">
+    <Accordion>
+      <AccordionTab header="Ullamco laboris nisi">
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
           magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -12,7 +12,7 @@
           laborum.
         </p>
       </AccordionTab>
-      <AccordionTab header="Header II">
+      <AccordionTab header="Facilis est">
         <p>
           Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
           aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
@@ -21,7 +21,7 @@
           ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
         </p>
       </AccordionTab>
-      <AccordionTab header="Header III">
+      <AccordionTab header="Accusamus et iusto">
         <p>
           At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque
           corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in
@@ -31,8 +31,11 @@
         </p>
       </AccordionTab>
     </Accordion>
-</div></template>
+  </div>
+</template>
 
-<style scoped>h1 {
+<style scoped>
+h1 {
   border: 5px solid blue;
-}</style>
+}
+</style>
