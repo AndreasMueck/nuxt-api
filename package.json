@@ -22,6 +22,7 @@
   "dependencies": {
     "@vee-validate/nuxt": "^4.10.5",
     "@vee-validate/yup": "^4.10.5",
+    "date-fns": "^2.30.0",
     "nuxt-lazy-load": "^3.0.4",
     "sass": "^1.63.6",
     "vue-json-pretty": "^2.2.4",

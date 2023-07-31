@@ -80,18 +80,18 @@ const login = async () => {
     };
 
     //const { data, error } = await useLazyFetch(authUrl, {
-    await useLazyFetch(authUrl, requestOptions).then((response) => {
+    await useLazyFetch(authUrl, requestOptions).then((res) => {
         // response object: data, error, execute, pending, refresh
 
-        const responseData = response.data.value;
-        const responseError = response.error.value;
-        if (responseError) {
+        const resData = res.data.value;
+        const resError = res.error.value;
+        if (resError) {
             loading.value = false; // Spin loader in button AUS
-            error.value = responseError; // nutze error-ref für die Ausgabe im Template
+            error.value = resError; // nutze error-ref für die Ausgabe im Template
             toast.add({ severity: "error", summary: "Fehler", detail: "Ungültige Anmeldedaten", life: 5000 });
         } else {
-            data.value = responseData; // nutze data-ref für die Ausgabe im Template
-            accessToken.value = responseData.data.token; // schreibe das gelieferte Access Token in useState
+            data.value = resData; // nutze data-ref für die Ausgabe im Template
+            accessToken.value = resData.data.token; // schreibe das gelieferte Access Token in useState
             isAuthenticated.value = true; // isAuthenticated flag wird gesetzt. User ist authentifiziert und kann das Formular ausfüllen
             return navigateTo("/"); // redirect auf die Formularseite, da User authentifiziert ist
         }
@@ -101,10 +101,11 @@ const login = async () => {
 const label = ref("Provided: Absenden");
 provide("key", label); // Deaktivieren dann wird default im Inject genommen
 
-const isTrue = ref(false)
-
 const AppTable = resolveComponent('AppTable')
 const AppTabulator = resolveComponent('AppTabulator')
+
+const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7;
+
 
 </script>
 
@@ -112,6 +113,9 @@ const AppTabulator = resolveComponent('AppTabulator')
     <div class="card">
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
+                <Countdown v-slot="{ days, hours, minutes, seconds }" :timestamp="endTime">
+                    <h1>{{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}</h1>
+                </Countdown>
                 <h1>Login</h1>
                 <div>
                     ( UI: PrimeVue / Theme: saga-blue / Font: Lato )
@@ -134,8 +138,10 @@ const AppTabulator = resolveComponent('AppTabulator')
                         </div>
                         <div class="button-bar">
                             <Button type="submit" label="Anmelden" icon="pi pi-user" :loading="loading"></Button>
-                            <Button type="reset" label="Reset" icon="pi pi-times" class="p-button-secondary" />
-                            <Button label="Background ändern" class="p-button-secondary" @click="isActive = !isActive" />
+                            <Button type="reset" label="Standartwerte laden" icon="pi pi-times"
+                                class="p-button-secondary" />
+                            <Button label="Komponente und Hintergrundfarbe ändern" class="p-button-secondary"
+                                @click="isActive = !isActive" />
                         </div>
                         <div>
                             <p :class="{ gross: isActive }">Farbe geändert</p>
@@ -180,11 +186,10 @@ const AppTabulator = resolveComponent('AppTabulator')
             <nuxt-link to="/veelidate">Veelidate</nuxt-link><br />
             <nuxt-link to="/radio">Radio</nuxt-link><br />
             <nuxt-link to="/vee">Vee</nuxt-link><br />
-        </div>--><br />
+        </div>-->
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
-                <component :is="isTrue ? AppTable : AppTabulator"></component><br />
-                <button @click="isTrue = !isTrue">Toggle die Komponente</button><br />
+                <component :is="isActive ? AppTable : AppTabulator"></component><br />
             </div>
         </div>
         <FooBar>
@@ -195,6 +200,7 @@ const AppTabulator = resolveComponent('AppTabulator')
         </FooBar>
 
         <div>
+            <!--
             <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--lrg">
                 <li class="kachelnwidget__item.kachelnwidget__item--lrg" v-for="item in kacheln.kachelnLrg">
                     <a class="kachelnwidget__link" :href="item.url">
@@ -202,6 +208,8 @@ const AppTabulator = resolveComponent('AppTabulator')
                     </a>
                 </li>
             </ul>
+            -->
+            <!--
             <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--md">
                 <li class="kachelnwidget__item.kachelnwidget__item--md" v-for="item in kacheln.kachelnMd">
                     <a class="kachelnwidget__link" :href="item.url">
@@ -209,6 +217,7 @@ const AppTabulator = resolveComponent('AppTabulator')
                     </a>
                 </li>
             </ul>
+            -->
             <ul class="kachelnwidget__kachelwrapper kachelnwidget__kachelwrapper--sml">
                 <li class="kachelnwidget__item.kachelnwidget__item--sml" v-for="item in kacheln.kachelnSml">
                     <a class="kachelnwidget__link" :href="item.url">
@@ -217,13 +226,13 @@ const AppTabulator = resolveComponent('AppTabulator')
                 </li>
             </ul>
         </div>
-        <VideoFullwidth filename="placeholder" />
+        <!-- <VideoFullwidth filename="placeholder" />-->
     </div>
 </template>
 
 <style>
 .backclass {
-    background-color: #ff0;
+    background-color: lightgray;
 }
 </style>
 

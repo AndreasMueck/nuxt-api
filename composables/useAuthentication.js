@@ -3,5 +3,4 @@ export const useAuthentication = () => { // named export
 
     const isAuthenticated = authenticactedState.value ? true : false; 
     return isAuthenticated;
-
 }
