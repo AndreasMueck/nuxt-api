@@ -107,6 +107,19 @@ const AppTabulator = resolveComponent('AppTabulator')
 const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7;
 
 
+const persons = [
+    { firstname: "Malcom", lastname: "Reynolds" },
+    { firstname: "Kaylee", lastname: "Frye" },
+    { firstname: "Jayne", lastname: "Cobb" }
+];
+
+function getFullName(item) {
+    return [item.firstname, item.lastname].join(" ")
+}
+
+const output = persons.map(getFullName)
+console.log(output) // Array
+
 </script>
 
 <template>

@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     // Hier auch die Route-Parameter Abfrage für die eingeladenen Gäste
     // .... 
 
-    // Ist User authenitifiert?
+    // Ist User authentifiziert?
     if (!isAuthenticated) {
       return navigateTo('/login');
     }
