@@ -4,6 +4,6 @@
       <NuxtPage />
     </NuxtLayout>
     <!-- Toast für Nachrichten-->
-    <Toast position="bottom-right" />
+    <Toast position="top-right" />
   </div>
 </template>

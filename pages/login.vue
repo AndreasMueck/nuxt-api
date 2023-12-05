@@ -4,14 +4,20 @@ import { useToast } from "primevue/usetoast";
 
 import { KachelService } from '@/service/KachelService';
 
+const runtimeConfig = useRuntimeConfig()
+const apiUrl = runtimeConfig.public.NUXT_PUBLIC_API
+
 const kacheln = KachelService;
 
 const toast = useToast();
 
-const accessToken = useState("accessToken", () => ""); // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
-const isAuthenticated = useState("authenticated", () => false); // User ist nicht authentifiziert
+// accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
+const accessToken = useState("accessToken", () => "");
 
-const authUrl = "http://directus8/huawei/auth/authenticate";
+// User ist nicht authentifiziert
+const isAuthenticated = useState("authenticated", () => false);
+
+const authUrl = apiUrl + '/auth/authenticate';
 
 const isActive = ref(false)
 
@@ -99,26 +105,12 @@ const login = async () => {
 };
 
 const label = ref("Provided: Absenden");
-provide("key", label); // Deaktivieren dann wird default im Inject genommen
+provide("key", label); // Deaktivieren dann wird der default-wert aus dem Inject genommen
 
 const AppTable = resolveComponent('AppTable')
 const AppTabulator = resolveComponent('AppTabulator')
 
-const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7;
-
-
-const persons = [
-    { firstname: "Malcom", lastname: "Reynolds" },
-    { firstname: "Kaylee", lastname: "Frye" },
-    { firstname: "Jayne", lastname: "Cobb" }
-];
-
-function getFullName(item) {
-    return [item.firstname, item.lastname].join(" ")
-}
-
-const output = persons.map(getFullName)
-console.log(output) // Array
+const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7; // UNIX-Timestamp
 
 </script>
 
@@ -126,9 +118,15 @@ console.log(output) // Array
     <div class="card">
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
-                <Countdown v-slot="{ days, hours, minutes, seconds }" :timestamp="endTime">
-                    <h1>{{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}</h1>
-                </Countdown>
+                <!-- COUNTDOWN-COMPONENTE ANFANG -->
+                <!-- endTime als Prop übergeben - Durch v-slot meldet Kind-Komponente Daten zurück an Eltern-Komponente, die hier ist-->
+                <ClientOnly>
+                    <Countdown v-slot="{ days, hours, minutes, seconds }" :timestamp="endTime">
+                        <!-- destructuring des zeit-objekts -->
+                        <h2>{{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}</h2>
+                    </Countdown>
+                </ClientOnly>
+                <!-- COUNTDOWN-COMPONENTE ENDE -->
                 <h1>Login</h1>
                 <div>
                     ( UI: PrimeVue / Theme: saga-blue / Font: Lato )
@@ -153,11 +151,11 @@ console.log(output) // Array
                             <Button type="submit" label="Anmelden" icon="pi pi-user" :loading="loading"></Button>
                             <Button type="reset" label="Standartwerte laden" icon="pi pi-times"
                                 class="p-button-secondary" />
-                            <Button label="Komponente und Hintergrundfarbe ändern" class="p-button-secondary"
+                            <Button label="Komponente, Schriftgrösse und Hintergrundfarbe ändern" class="p-button-secondary"
                                 @click="isActive = !isActive" />
                         </div>
                         <div>
-                            <p :class="{ gross: isActive }">Farbe geändert</p>
+                            <p :class="{ gross: isActive }">Komponente, Schriftgrösse und Hintergrundfarbe geändert</p>
                         </div>
                     </div>
                 </form>

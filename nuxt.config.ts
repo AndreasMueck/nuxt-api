@@ -3,6 +3,15 @@ export default defineNuxtConfig({
     devtools: {
         enabled: false
     },
+    runtimeConfig: {
+        public: {
+            NUXT_PUBLIC_API: process.env.NUXT_PUBLIC_API
+        }
+    },
+    sourcemap: {
+        server: true,
+        client: true
+    },
     modules: [
         '@nuxt/image',
         '@nuxt/content',
@@ -27,12 +36,12 @@ export default defineNuxtConfig({
         presets: {
             avatar: {
                 modifiers: {
-                    format: 'png',
+                    format: 'webp',
                     quality: '100',
                 }
             }
         },
-        format: ['webp'],
+        //format: ['webp'],
         screens: {
             xs: 320,
             sm: 640,

@@ -14,23 +14,20 @@ const sizesvar = 'sm:100px md:200px lg:300px xl:350px'
 
 <template>
     <div>
-        <h1>TEST Seite</h1>
         <nuxt-link to=" /login">Loginseite</nuxt-link><br>
         <nuxt-link to="/">Formularseite (index.vue)</nuxt-link>
-        <div class="a">Dieser Text enthält a Selektor </div>
+        <div class="a">Dieser Text enthält eine Klasse mit dem a-Selektor aus dem Parent-Style</div>
+        <h1>TEST Seite</h1>
         <h4>{{ accessToken }}</h4>
         <!-- <AppCamera name="Sony A7RIV" img="/images/sony.jpg" :hello-world="world" /> name/img sind props im child -->
     </div>
-    <div class="test">
-        <nuxt-img :sizes="sizesvar" preset="avatar" src="/images/sony.jpg" />
-    </div>
-    <h1>sfasdfsad</h1>
+    <nuxt-picture src="/images/sony.jpg" />
+
+    <!-- <nuxt-img :sizes="sizesvar" preset="avatar" src="/images/sony.jpg" />-->
     <!--<nuxt-img sizes="sm:100px md:200px lg:300px xl:350px" preset="avatar" src="/images/sony.jpg" />-->
     <!--<img data-src="/images/large.jpg" />-->
-    <div class="back1">
-        <!--<lazy-nuxt-picture loading="lazy" format="webp" src="/images/sony.jpg" />-->
-        <nuxt-picture src="/images/large.jpg" width="3840" height="2160" />
-    </div>
+    <!--<lazy-nuxt-picture loading="lazy" format="webp" src="/images/sony.jpg" />-->
+    <!-- <nuxt-img src="/images/large.jpg" /> -->
 </template>
 
 <style scoped>

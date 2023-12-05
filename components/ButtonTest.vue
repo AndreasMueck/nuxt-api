@@ -1,22 +1,14 @@
-<template>
-    <div>
-        <button class="button" :disabled="disabled" v-bind="$attrs">
-            <slot>Default</slot>
-        </button>
-        {{ message }}
-    </div>
-</template>
-
 <script>
-// use normal <script> to declare options
+// benutze normales <script> um optionen zu deklarieren
 export default {
-    inheritAttrs: false
+    inheritAttrs: false  // fallthrough attribute werden nicht ausdrücklich nicht durchgereicht
 }
 </script>
 
 <script setup>
 import { useAttrs } from 'vue'
-// Props sind nicht notwendig, weil Button class, style und id erhält => Fallthrough attribute werden automatisch durchgereicht an die Komponente
+// class, style und id werden automatisch als s.g. Fallthrough attribute automatisch durchgereicht an die Komponente
+// daher gibt es hier nur ein prop: disabled
 defineProps({
     disabled: Boolean
 })
@@ -25,12 +17,22 @@ const test = function ExpensiveClass() {
     return 'XXXX'
 }
 
-const message = inject('key', () => 'Bob Day', true) // Zweiter Parameter ist default wenn kein Key provided wurde
+// Provide + Inject Beispiel -> Provide kommt aus index.vue
+const message = inject('key', () => 'Erika Mustermann', true) // Zweiter Parameter ist default wenn kein Key provided wurde
 console.log(message)
 
-const attrs = useAttrs()
+//const attrs = useAttrs()
 //console.log(attrs)
 </script>
+
+<template>
+    <div>
+        <button class="button" :disabled="disabled" v-bind="$attrs">
+            <slot>Default</slot>
+        </button>
+        {{ message }}
+    </div>
+</template>
 
 <style>
 .button {

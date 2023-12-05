@@ -1,6 +1,7 @@
 <script setup>
 import { useToast } from 'primevue/usetoast'
 const toast = useToast()
+const runtimeConfig = useRuntimeConfig()
 
 definePageMeta({
     middleware: 'auth' // Zugriff auf Seite index.vue nur als berechtigter User
@@ -16,7 +17,10 @@ useHead({
     }
 })
 
-const postUrl = 'http://directus8/huawei/items/golfcup2023'
+//const postUrl = 'https://directus8:8890/huawei/items/golfcup2023'
+const apiUrl = runtimeConfig.public.NUXT_PUBLIC_API
+const postUrl = apiUrl + '/items/golfcup2023'
+
 
 // Allgemeine reactive Variablen
 const error = ref() // Error
@@ -66,7 +70,7 @@ const onSubmit = async () => {
                 showForm.value = false
             } else {
                 toast.add({ severity: 'success', summary: 'Speichern', detail: 'Ihre Daten wurden gespeichert!', life: 5000 })
-                toast.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Versenden der E-Mail!', life: 5050 })
+                //toast.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Versenden der E-Mail!', life: 5050 })
                 data.value = responseData // nutze data-ref für die Ausgabe im Template
                 showForm.value = false
             }
@@ -101,7 +105,7 @@ watch(
 
             // Ist ein Datensatz mit dieser Email bereits vorhanden?
             const accessToken = useState('accessToken')
-            const emailCheckUrl = 'http://directus8/huawei/items/golfcup2023?filter[email]=' + email + '&single=1'
+            const emailCheckUrl = apiUrl + '/items/golfcup2023?filter[email]=' + email + '&single=1'
             const { pending, data } = await useLazyFetch(emailCheckUrl, {
                 method: 'GET',
                 headers: { 'Authorization': 'Bearer ' + accessToken.value }
@@ -133,7 +137,7 @@ watch(
                 <h3>Daten wurden gespeichert</h3>
             </div>
             <div class="center-form-green">
-                Kontrolle: Rückmeldung des Servers<br>
+                Kontrolle: Die Daten kommen als Rückmeldung des Servers<br>
                 <myJson :data="data" :showIcon="true" />
             </div>
             <br /><br />
@@ -196,9 +200,6 @@ watch(
                     <myJson :data="form" :showIcon="true" />
                 </div>
             </form>
-            <!-- Toast für Nachrichten-->
-            <Toast position="top-center" />
-            <br /><br />
         </template>
     </div>
 </template>

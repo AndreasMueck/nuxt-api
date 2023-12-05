@@ -22,5 +22,5 @@ onMounted(() => {
 });
 </script>
 <template>
-    <slot v-bind="duration" />
+    <slot v-bind="duration" /> <!-- Zurückmelden an Eltern-Komponente -->
 </template>

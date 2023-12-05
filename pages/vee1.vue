@@ -25,7 +25,6 @@
             <small id="text-error" class="p-error">{{ errorMessage || '&nbsp;' }}</small>
             <Button type="submit" label="Submit" />
         </form>
-        <Toast position="top-center" />
     </div>
 </template>
 

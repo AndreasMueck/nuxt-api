@@ -2,7 +2,6 @@
     <div class="foot">
         <p>FOOTER</p>
     </div>
-    <Toast position="bottom-right" />
 </template>
 
 <style>
