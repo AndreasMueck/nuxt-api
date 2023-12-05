@@ -1,49 +1,7 @@
-# Nuxt 3 Minimal Starter
+# Nuxt API auth testing
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Nuxt API auth testing
-#### Das Repo soll (irgendwann) als Starter für einfaches API-Auth dienen  
+## Das Repo soll (irgendwann) als Starter für einfaches API-Auth dienen  
 
 + pages
 + middleware (auth.js) mit auth check
 + composable (useAuthentication) mit auth preparation
-
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
