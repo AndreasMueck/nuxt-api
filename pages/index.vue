@@ -4,7 +4,7 @@ const toast = useToast()
 const runtimeConfig = useRuntimeConfig()
 
 definePageMeta({
-    middleware: 'auth' // Zugriff auf Seite index.vue nur als berechtigter User
+    middleware: 'auth', // Zugriff auf Seite index.vue nur als berechtigter User
 })
 
 useHead({
@@ -129,6 +129,7 @@ watch(
 
 <template>
     <div>
+        <nuxt-link to="/info">INFO</nuxt-link><br />
         <nuxt-link to="/login">Zurück zu Login</nuxt-link><br />
         <nuxt-link to="/vee1">Hin zu vee1</nuxt-link>
         <LoginImage />

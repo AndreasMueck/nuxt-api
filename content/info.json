@@ -1,0 +1,8 @@
+{
+    "title": {
+        "title1": "Hello Content v2!",
+        "title2": "Hello Content XXXXX!"
+    },
+    "description": "The writing experience for Nuxt 3",
+    "category": "announcement"
+}

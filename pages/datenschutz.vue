@@ -1,3 +1,9 @@
+<script setup>
+definePageMeta({
+  title: 'Some Page'
+})
+</script>
+
 <template>
   <nuxt-link to="/">Index</nuxt-link><br />
   <main>

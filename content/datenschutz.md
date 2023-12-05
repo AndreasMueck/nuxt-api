@@ -1,6 +1,5 @@
 ---
-title: 'Seitentitel aus datenschutz.md'
-description: 'Meta Beschreibung der Seite'
+title: A Great Datenschutz
 ---
 
 # Datenschutzerklärung aus /content/datenschutz.md
@@ -40,7 +39,6 @@ My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
 4. Fourth item
 
 ![Sony](/images/sony.jpg)
-
 
 | Key | Type      | Description |
 | --- | --------- | ----------- |
