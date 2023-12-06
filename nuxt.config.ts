@@ -3,6 +3,10 @@ export default defineNuxtConfig({
     devtools: {
         enabled: false
     },
+    /*devServer: {
+        host: '192.168.1.35',
+        port: 9991
+    },*/
     runtimeConfig: {
         public: {
             NUXT_PUBLIC_API: process.env.NUXT_PUBLIC_API

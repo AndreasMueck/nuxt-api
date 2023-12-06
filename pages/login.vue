@@ -1,25 +1,57 @@
 <script setup>
 import { ref, useLazyFetch } from "#imports";
 import { useToast } from "primevue/usetoast";
-
 import { KachelService } from '@/service/KachelService';
+
+/**
+ * APP Konfiguration
+ */
 
 const runtimeConfig = useRuntimeConfig()
 const apiUrl = runtimeConfig.public.NUXT_PUBLIC_API
 
-const kacheln = KachelService;
-
 const toast = useToast();
+const kacheln = KachelService;
 
 // accessToken mit NULL initialisiert // useState ist nicht reaktiv in bezug auf HMR
 const accessToken = useState("accessToken", () => "");
-
 // User ist nicht authentifiziert
 const isAuthenticated = useState("authenticated", () => false);
-
+// Create API route for authentification
 const authUrl = apiUrl + '/auth/authenticate';
 
-const isActive = ref(false)
+// Testing für dynamische Änderungen an der Seite
+const isActive = ref(false) // Wechsel Background-Color und Komponenten-Tausch
+const loading = ref(false); // Spin loader in button AUS
+
+// composables testing
+const hello = useHello() // export named
+const helloMars = useHelloMars() // export unnamed -> Dateiname wird zum Funktionsnamen
+
+const pending = ref();
+const data = ref();
+const error = ref();
+
+const formBody = ref({
+    /**
+     * Werte initialiseren die Input Felder -> automatisch ausgefüllt
+     * Für den Requestboy wird aber email erstellt: 'golfcup2023@wak-online.de' 
+     * Directus lässt nur emails als Benutzernamen für Temporary Access Token zu
+     * https://v8.docs.directus.io/api/authentication.html#tokens
+     */
+    email: "golfcup2023",
+    password: "handicap",
+});
+
+// Ref object für den request body
+const requestBody = ref({
+    email: "",
+    password: "",
+});
+
+/**
+ * Page Konfiguration
+ */
 
 useHead({
     link: [{ rel: 'canonical', href: 'http://localhost:3000/' }],
@@ -49,28 +81,9 @@ definePageMeta({
     //layout: "custom",
 });
 
-// composables testing
-const hello = useHello() // export named
-const helloMars = useHelloMars() // export unnamed -> Dateiname wird zum Funktionsnamen
-
-const pending = ref();
-const data = ref();
-const error = ref();
-
-const formBody = ref({
-    // Werte initialiseren die Input Felder -> automatisch ausgefüllt
-    //email: 'golfcup2023@wak-online.de',
-    email: "golfcup2023",
-    password: "handicap",
-});
-
-const requestBody = ref({
-    // Diese Angaben gehen in den Request-Body
-    email: "",
-    password: "",
-});
-
-const loading = ref(false); // Spin loader in button AUS
+/**
+ * Page actions
+ */
 
 const login = async () => {
     loading.value = true; // Spin loader in button AN
@@ -104,13 +117,17 @@ const login = async () => {
     });
 };
 
+/**
+ * Tests
+ */
+
 const label = ref("Provided: Absenden");
 provide("key", label); // Deaktivieren dann wird der default-wert aus dem Inject genommen
 
 const AppTable = resolveComponent('AppTable')
 const AppTabulator = resolveComponent('AppTabulator')
 
-const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7; // UNIX-Timestamp
+const $endTime = Date.now() + 1000 * 60 * 60 * 24 * 7; // UNIX-Timestamp
 
 </script>
 
@@ -119,9 +136,9 @@ const endTime = Date.now() + 1000 * 60 * 60 * 24 * 7; // UNIX-Timestamp
         <div class="flex justify-content-center flex-wrap card-container blue-container">
             <div class="card sm:w-9 md:w-6">
                 <!-- COUNTDOWN-COMPONENTE ANFANG -->
-                <!-- endTime als Prop übergeben - Durch v-slot meldet Kind-Komponente Daten zurück an Eltern-Komponente, die hier ist-->
+                <!-- endTime als Prop übergeben - Durch v-slot meldet Kind-Komponente Daten zurück an Eltern-Komponente, die hier ist -->
                 <ClientOnly>
-                    <Countdown v-slot="{ days, hours, minutes, seconds }" :timestamp="endTime">
+                    <Countdown v-slot="{ days, hours, minutes, seconds }" :timestamp="$endTime">
                         <!-- destructuring des zeit-objekts -->
                         <h2>{{ days }}:{{ hours }}:{{ minutes }}:{{ seconds }}</h2>
                     </Countdown>
