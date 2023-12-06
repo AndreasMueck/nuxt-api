@@ -1,6 +1,7 @@
 <script setup>
 import { useToast } from 'primevue/usetoast'
 const toast = useToast()
+
 const runtimeConfig = useRuntimeConfig()
 
 definePageMeta({
@@ -59,7 +60,7 @@ const onSubmit = async () => {
             toast.add({ severity: 'error', summary: 'Fehler', detail: 'Die E-Mail ist schon gespeichert worden', life: 5050 })
         }
 
-    } else {
+    } else { // E-Mail ist gültig und nicht vorhanden - Schreibe Daten
 
         const accessToken = useState('accessToken')
         await useLazyFetch(postUrl, {
@@ -93,10 +94,9 @@ const onSubmit = async () => {
     }
 }
 
-// watchEffect(() => {
-//     console.log('Anrede: ', form.anrede); // Value von Option in Anrede
-// });
-
+/**
+ * Checke immer E-Mail Formularfeld
+ */
 watch(
     () => form.email,
     async (email) => {
@@ -123,6 +123,12 @@ watch(
     }
 )
 
+/**
+ * Test watchEffect
+ */
+// watchEffect(() => {
+//     console.log('Anrede: ', form.anrede); // Value von Option in Anrede
+// });
 </script>
 
 <template>
