@@ -28,7 +28,7 @@ const data = ref() // Daten
 const pending = ref() // In Bearbeitung
 const showForm = ref(true) // Zeige Form
 const mailError = ref('') // Fehlermeldung für E-Mail-Eingabe Fehler
-const btnDisabled = ref(true); // Speichern Button default: deaktiviert
+const btnDisabled = ref(false); // Speichern Button default: deaktiviert
 
 // Select-Optionen Anrede im Formular, muss nicht reactive sein, daher kein ref oder reactive object
 const optionsAnrede = [
@@ -48,48 +48,50 @@ const form = reactive({
 
 // Sende Daten an Server
 const onSubmit = async () => {
-    const accessToken = useState('accessToken')
 
-    await useLazyFetch(postUrl, {
-        method: 'POST',
-        //headers: authHeader(), // Warum funktioniert mein Composable authHeader() in UTILS nicht? Später klären!
-        headers: { 'Authorization': 'Bearer ' + accessToken.value },
-        body: JSON.stringify(form)
-    })
-        .then(response => {
+    if (mailError.value != true) {
 
-            // console.log(JSON.stringify(response.data.value.data)) // Liefert kompletten Datensatz
-            // console.log(JSON.stringify(response.data.value.data.id)) // Liefert Datensatz ID
+        if (mailError.value == 'EMAIL_FORMAT_NOT_OK') {
+            toast.add({ severity: 'error', summary: 'Fehler', detail: 'E-Mail Format ist nicht ok', life: 5050 })
+        }
 
-            const responseData = response.data.value
-            const responseError = response.error.value
+        if (mailError.value == 'EMAIL_ALREADY_EXISTS') {
+            toast.add({ severity: 'error', summary: 'Fehler', detail: 'Die E-Mail ist schon gespeichert worden', life: 5050 })
+        }
 
-            if (responseError) {
-                toast.add({ severity: 'error', summary: 'Fehler', detail: 'Ihre Daten wurden nicht gespeichert!', life: 5050 })
-                error.value = responseError // nutze error-ref für die Ausgabe im Template
-                showForm.value = false
-            } else {
-                toast.add({ severity: 'success', summary: 'Speichern', detail: 'Ihre Daten wurden gespeichert!', life: 5000 })
-                //toast.add({ severity: 'error', summary: 'Fehler', detail: 'Fehler beim Versenden der E-Mail!', life: 5050 })
-                data.value = responseData // nutze data-ref für die Ausgabe im Template
-                showForm.value = false
-            }
+    } else {
 
-        }, error => {
-            console.log('exception...')
-            console.log(error)
+        const accessToken = useState('accessToken')
+        await useLazyFetch(postUrl, {
+            method: 'POST',
+            //headers: authHeader(), // TODO Warum funktioniert mein Composable authHeader() in UTILS nicht? Später klären!
+            headers: { 'Authorization': 'Bearer ' + accessToken.value },
+            body: JSON.stringify(form)
         })
+            .then(response => {
 
-}
+                // console.log(JSON.stringify(response.data.value.data)) // Liefert kompletten Datensatz
+                // console.log(JSON.stringify(response.data.value.data.id)) // Liefert Datensatz ID
 
-function validateField(value) {
-    if (!value) {
-        return 'Value is required.';
+                const responseData = response.data.value
+                const responseError = response.error.value
+
+                if (responseError) {
+                    toast.add({ severity: 'error', summary: 'Fehler', detail: 'Ihre Daten wurden nicht gespeichert!', life: 5050 })
+                    error.value = responseError // nutze error-ref für die Ausgabe im Template
+                    showForm.value = false
+                } else {
+                    toast.add({ severity: 'success', summary: 'Speichern', detail: 'Ihre Daten wurden gespeichert!', life: 5000 })
+                    data.value = responseData // nutze data-ref für die Ausgabe im Template
+                    showForm.value = false
+                }
+
+            }, error => {
+                console.log('Ausnahmefehler...')
+                console.log(error)
+            })
     }
-
-    return true;
 }
-
 
 // watchEffect(() => {
 //     console.log('Anrede: ', form.anrede); // Value von Option in Anrede
@@ -99,28 +101,24 @@ watch(
     () => form.email,
     async (email) => {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            // Emaileingabe ist gültig
-            console.log(`email ist: ${email}`)
-            mailError.value = ('')
 
-            // Ist ein Datensatz mit dieser Email bereits vorhanden?
+            // Emaileingabe ist gültig
+            mailError.value = (true)
+
+            // Check: Email ist ok, ist ein Datensatz mit dieser Email bereits vorhanden?
             const accessToken = useState('accessToken')
             const emailCheckUrl = apiUrl + '/items/golfcup2023?filter[email]=' + email + '&single=1'
             const { pending, data } = await useLazyFetch(emailCheckUrl, {
                 method: 'GET',
                 headers: { 'Authorization': 'Bearer ' + accessToken.value }
             })
+
             if (data.value) { // data.value ist nicht leer, ergo E-Mail ist vorhanden
-                mailError.value = ('Email ist bereits registriert')
-                btnDisabled.value = true;
-            } else {
-                btnDisabled.value = false;
+                mailError.value = ('EMAIL_ALREADY_EXISTS')
             }
 
         } else {
-            console.log('Nope')
-            mailError.value = ('Bitte eine gültige Email eingeben')
-            btnDisabled.value = true;
+            mailError.value = ('EMAIL_FORMAT_NOT_OK')
         }
     }
 )
@@ -187,11 +185,9 @@ watch(
                             class="w-full md:w-14rem" />
                     </span>
                     <div v-if="pending">Checke E-Mail ...</div>
-                    <span v-if="mailError" class="false">&nbsp;&nbsp;{{ mailError }}</span>
                     <br /><br />
 
                     <div class="button-bar">
-                        <!--<Button type="submit" :disabled="disabled">Speichern</Button>-->
                         <Button type="submit" :disabled="btnDisabled" label="Speichern" icon="pi pi-save"></Button>
                     </div>
 
