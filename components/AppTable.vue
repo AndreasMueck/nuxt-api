@@ -3,6 +3,7 @@ import { ProductService } from '@/service/ProductService';
 
 onMounted(() => {
   ProductService.getProducts().then((data) => (products.value = data));
+  console.log('AppTable mounted');
 });
 
 const products = ref();

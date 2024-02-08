@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+onMounted(() => {
+  console.log('AppTabulator mounted');
+});
+</script>
 
 <template>
   <div class="card">

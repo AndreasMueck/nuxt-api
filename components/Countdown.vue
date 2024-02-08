@@ -2,7 +2,7 @@
 import { intervalToDuration } from 'date-fns';
 
 const props = defineProps({
-    timestamp: {
+    timestamp: { // ist das Ende der Zeit‚
         type: Number,
         required: true,
     },
@@ -15,17 +15,17 @@ function getDuration() {
     });
 }
 
-const $duration = ref(getDuration());
+const duration = ref(getDuration());
 
 onMounted(() => {
     setInterval(() => {
-        $duration.value = getDuration(); // Ergebnis der Funktion wird als Ergebnis zurückgegeben - duration ist ein Ref
-    }, 1000);
+        duration.value = getDuration(); // Ergebnis der Funktion wird als Ergebnis zurückgegeben - duration ist ein Ref
+    }, 1000); // 1000ms = 1 Sek
 });
 
-console.log(`Die Zeit ist ${$duration.value.seconds}`)
+console.log(`Der Countdown ist ${duration.value.days}:${duration.value.hours}:${duration.value.minutes}:${duration.value.seconds}`)
 </script>
 
 <template>
-    <slot v-bind="$duration" /> <!-- Zurückmelden an Eltern-Komponente -->
+    <slot v-bind="duration" /> <!-- Zurückmelden an Eltern-Komponente -->
 </template>

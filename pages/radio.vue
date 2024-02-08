@@ -25,7 +25,6 @@ function onSubmit(values) {
             <ErrorMessage name="drink" />
             <br />
             <button type="submit">Submit</button>
-
             <p>Values</p>
             <pre>{{ values }}</pre>
         </Form>
